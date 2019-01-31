@@ -6,11 +6,11 @@ Resources:
   myStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://github.com/ge8/docaas-summit/backend/cognito.yaml
+      TemplateURL: https://github.com/ge8/docaas-summit/blob/master/backend/cognito.yaml
       # TimeoutInMinutes: '60'
       # Parameters: 
 Outputs:
   StackRef:
     Value: !Ref myStack
-  OutputFromNestedStack:
-    Value: !GetAtt myStack.Outputs.BucketName
+  # OutputFromNestedStack:
+  #   Value: !GetAtt myStack.Outputs.BucketName

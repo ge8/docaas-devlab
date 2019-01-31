@@ -6,7 +6,7 @@ Resources:
   myStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://github.com/ge8/docaas-summit/blob/master/backend/cognito.yaml
+      TemplateURL: https://s3-ap-southeast-2.amazonaws.com/docaas-summit/cognito.yaml
       # TimeoutInMinutes: '60'
       # Parameters: 
 Outputs:

@@ -2,8 +2,9 @@
 In this session, we crack open the IDE to secure a multi-tenant SaaS platform built on a ReactJS web app and NodeJS serverless microservices. We use Amazon API Gateway and Amazon Cognito to simplify the operation and security of the service's API and identity functionality. We enforce tenant isolation and data partitioning with OAuth's JWT tokens. We'll then abstract the security complexity from developers to keep operational burden to a minimum, maximizing developer productivity, and maintaining a great developer experience.
 
 # Pre-talk build (single customer functionality – open to the world)
-SAM template with:
-Cfn + certificate
+SAM template with 2 optional parameters: domainname & region (estaba.net default + ap-southeast-2)
+S3 bucket
+Cf + certificate
 R53 record
 Cognito.
 NO PLAN.

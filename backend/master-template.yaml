@@ -1,0 +1,16 @@
+# Nesting CloudFormation Stacks.
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-cloudformation.html
+
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  myStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://github.com/ge8/docaas-summit/backend/cognito.yaml
+      # TimeoutInMinutes: '60'
+      # Parameters: 
+Outputs:
+  StackRef:
+    Value: !Ref myStack
+  OutputFromNestedStack:
+    Value: !GetAtt myStack.Outputs.BucketName

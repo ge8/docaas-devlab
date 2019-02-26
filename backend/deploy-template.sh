@@ -9,7 +9,7 @@ export STACK=docaas-summit
 # aws cloudformation delete-stack --stack-name $STACK
 # aws cloudformation wait stack-delete-complete --stack-name $STACK
 
-sam package --template-file cognito.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml --region $REGION
+sam package --template-file template.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml --region $REGION
 sam deploy --template-file packaged.yaml --stack-name $STACK --capabilities CAPABILITY_NAMED_IAM --region $REGION
 
 rm -f packaged.yaml

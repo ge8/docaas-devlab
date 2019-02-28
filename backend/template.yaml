@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: >
-  Deck of Cards As A Service
-
-  SAM Template for the Deck of Cards As A Service Application Suite
-  
+Description: Deck of Cards As A Service. SAM Template for the Deck of Cards As A Service Application Suite
 Globals:
   Function:
     Timeout: 20
@@ -16,6 +12,33 @@ Parameters:
     Default: hola
 
 Resources:
+  #S3 Bucket
+  TheBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration: 
+          -
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  TheBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref TheBucket
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource: !Join [ "", [ "arn:aws:s3:::", !Ref TheBucket, "/*" ] ]
+            # Principal: "*"
+            Principal: 
+              CanonicalUser: 04c2c1657ba630a9ceb7052e91388cf1a6448bb8bab3ab1dceec4121c1581d86fa4818e717147c66e08b00f4d76f5c11
+
+  #COGNITO
   # Creates a role that allows Cognito to send SNS messages
   SNSRole:
     Type: "AWS::IAM::Role"
@@ -146,7 +169,8 @@ Resources:
       Roles:
         authenticated: !GetAtt CognitoAuthorizedRole.Arn
         unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
-
+  
+  #LAMBDAS
   RoleForLambdas:
     Type: AWS::IAM::Role
     Properties: 
@@ -232,8 +256,6 @@ Resources:
       Environment:
         Variables:
           IDENTITY_POOL_ID: !Ref IdentityPool
-
-
   CorsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -243,6 +265,7 @@ Resources:
       FunctionName: DOCAAS_Cors
       Role: !GetAtt RoleForLambdas.Arn
 
+  #API GATEWAY
   RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
@@ -292,7 +315,8 @@ Resources:
       FunctionName: !GetAtt "CorsFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
-      
+
+  # API GATEWAY RESOURCES
   GetDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -375,9 +399,6 @@ Resources:
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
 
-
-
-
   ShuffleDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -418,7 +439,6 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
-
 
   CutDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -461,7 +481,6 @@ Resources:
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
   
-  
   GameApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -503,6 +522,33 @@ Resources:
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
 
+  # DYNAMODB
+  DynamoDecksTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: decks-master
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 50
+        WriteCapacityUnits: 50
+      SSESpecification:
+        SSEEnabled: true
+
+  DynamoGamesTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: games-master
+      PrimaryKey:
+        Name: id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 50
+        WriteCapacityUnits: 50
+      SSESpecification:
+        SSEEnabled: true
+
 Outputs:
   APIBaseURL:
     Value: !Sub "${RestApi}"
@@ -518,3 +564,7 @@ Outputs:
     Value: !Ref IdentityPool
     Export:
       Name: "IdentityPool::Id"
+  TheBucket:
+    Value: !Ref TheBucket
+    Export:
+      Name: "TheBucket::Id"

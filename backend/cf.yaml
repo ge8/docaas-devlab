@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CloudFront for Deck of Cards As A Service
+Globals:
+  Function:
+    Timeout: 20
+
+Parameters:
+  AcmCertificateArn:
+    Type: String
+    Description: The ARN of the SSL certificate to use for the CloudFront distribution.
+    Default: arn:aws:acm:us-east-1:385251132543:certificate/44d3cf20-aca4-4d10-a458-023ac1fcec4a
+  DomainName:
+    Type: String
+    Description: The website domain name.
+    Default: docaas.net
+
+Resources:
+  #CLOUDFRONT
+  TheCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+          - !Join [ "", [ "*.", !Ref DomainName ] ]
+        DefaultCacheBehavior:
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+          TargetOriginId: the-s3-bucket
+          ViewerProtocolPolicy: redirect-to-https
+          DefaultTTL: 0
+          MaxTTL: 0
+          MinTTL: 0
+        DefaultRootObject: index.html
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - DomainName: docaas-thebucket-db3lltn6bpjs.s3.amazonaws.com
+            Id: the-s3-bucket
+            S3OriginConfig:
+              OriginAccessIdentity:
+                !Join [ "", [ "origin-access-identity/cloudfront/", !Ref TheCloudFrontOriginAccessIdentity ] ]
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+      Tags:
+        - Key: Domain
+          Value: !Ref DomainName
+
+  TheCloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'CloudFront OAI for ${DomainName}'
+
+Outputs:
+  CloudfrontEndpoint:
+    Value: !GetAtt [TheCloudFrontDistribution, DomainName]
+    Description: Endpoint for Cloudfront distribution
+  TheCloudFrontOriginAccessIdentity:
+    Value: !Ref  TheCloudFrontOriginAccessIdentity
+    Description: The CloudFront Origin Access Identity 
+
+
+
+
+ 

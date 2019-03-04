@@ -9,7 +9,15 @@ Parameters:
   AuthName:
     Type: String
     Description: Unique Auth Name for Cognito Resources
-    Default: hola
+    Default: docaas
+  AcmCertificateArn:
+    Type: String
+    Description: The ARN of the SSL certificate to use for the CloudFront distribution.
+    Default: arn:aws:acm:us-east-1:385251132543:certificate/44d3cf20-aca4-4d10-a458-023ac1fcec4a
+  DomainName:
+    Type: String
+    Description: The website domain name.
+    Default: docaas.com
 
 Resources:
   #S3 Bucket
@@ -22,6 +30,9 @@ Resources:
           -
             ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      Tags:
+        - Key: Domain
+          Value: !Ref DomainName
 
   TheBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -34,9 +45,56 @@ Resources:
               - s3:GetObject
             Effect: Allow
             Resource: !Join [ "", [ "arn:aws:s3:::", !Ref TheBucket, "/*" ] ]
-            # Principal: "*"
-            Principal: 
-              CanonicalUser: 04c2c1657ba630a9ceb7052e91388cf1a6448bb8bab3ab1dceec4121c1581d86fa4818e717147c66e08b00f4d76f5c11
+            Principal:
+              CanonicalUser: !GetAtt TheCloudFrontOriginAccessIdentity.S3CanonicalUserId
+
+  #CLOUDFRONT
+  TheCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+          # - !Join [ "", [ "*.", !Ref DomainName ] ]
+        DefaultCacheBehavior:
+          Compress: true
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: none
+          TargetOriginId: the-s3-bucket
+          ViewerProtocolPolicy: redirect-to-https
+          DefaultTTL: 0
+          MaxTTL: 0
+          MinTTL: 0
+        DefaultRootObject: index.html
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - DomainName:
+              !Join [ "", [ !Ref TheBucket, ".s3.amazonaws.com" ] ]
+            Id: the-s3-bucket
+            S3OriginConfig:
+              OriginAccessIdentity:
+                !Join [ "", [ "origin-access-identity/cloudfront/", !Ref TheCloudFrontOriginAccessIdentity ] ]
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+      Tags:
+        - Key: Domain
+          Value: !Ref DomainName
+
+  TheCloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'CloudFront OAI for ${DomainName}'
 
   #COGNITO
   # Creates a role that allows Cognito to send SNS messages
@@ -568,3 +626,10 @@ Outputs:
     Value: !Ref TheBucket
     Export:
       Name: "TheBucket::Id"
+  CloudfrontEndpoint:
+    Value: !GetAtt [TheCloudFrontDistribution, DomainName]
+    Description: Endpoint for Cloudfront distribution
+  TheCloudFrontOriginAccessIdentity:
+    Value: !Ref  TheCloudFrontOriginAccessIdentity
+    Description: The CloudFront Origin Access Identity 
+

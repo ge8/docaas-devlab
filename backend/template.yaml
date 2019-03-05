@@ -9,7 +9,7 @@ Parameters:
   AuthName:
     Type: String
     Description: Unique Auth Name for Cognito Resources
-    Default: docaas-summit
+    Default: docaas
   AcmCertificateArn:
     Type: String
     Description: The ARN of the SSL certificate to use for the CloudFront distribution.
@@ -17,7 +17,7 @@ Parameters:
   DomainName:
     Type: String
     Description: The website domain name.
-    Default: summit.docaas.com
+    Default: summit.docaas.net
 
 Resources:
   #S3 Bucket

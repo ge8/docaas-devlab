@@ -3,7 +3,7 @@
 export BUCKET=docaas-summit
 # export DOMAIN=estaba.net
 export REGION=ap-southeast-2
-export STACK=docaas
+export STACK=docaas-summit
 
 # aws s3 cp cognito.yaml s3://docaas-summit
 # aws cloudformation delete-stack --stack-name $STACK

@@ -23,7 +23,7 @@ Resources:
   #S3 Bucket
   TheBucket:
     Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
+    DeletionPolicy: Delete
     Properties:
       BucketEncryption:
         ServerSideEncryptionConfiguration: 
@@ -95,6 +95,11 @@ Resources:
     Properties:
       CloudFrontOriginAccessIdentityConfig:
         Comment: !Sub 'CloudFront OAI for ${DomainName}'
+
+  #ROUTE53 Record
+
+
+
 
   #COGNITO
   # Creates a role that allows Cognito to send SNS messages
@@ -591,8 +596,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 50
         WriteCapacityUnits: 50
-      SSESpecification:
-        SSEEnabled: true
 
   DynamoGamesTable:
     Type: AWS::Serverless::SimpleTable
@@ -604,8 +607,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 50
         WriteCapacityUnits: 50
-      SSESpecification:
-        SSEEnabled: true
 
 Outputs:
   APIBaseURL:

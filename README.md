@@ -4,8 +4,9 @@ In this session, we crack open the IDE to secure a multi-tenant SaaS platform bu
 # Machine prerequisites:
 Install and configure AWS CLI
 Install and configure AWS SAM CLI
-A domain name in AWS Route 53
+A domain or subdomain name in AWS Route 53
 An AWS ACM certificate in the us-east-1 region for the domain name above.
+A private S3 bucket: SAMBUCKET
 
 # Lab Setup
 Clone repo: git clone https://github.com/ge8/docaas-summit

@@ -8,20 +8,25 @@
     "aws-amplify": "^1.1.22",
     "aws-amplify-react": "^2.3.2",
     "bootstrap": "^4.3.1",
+    "i": "^0.3.6",
     "jquery": "^3.3.1",
     "jwt-decode": "^2.2.0",
     "merge": "^1.2.1",
+    "popper.js": "^1.14.7",
     "react": "^16.5.1",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^16.5.1",
     "react-scripts": "1.1.5",
     "reactstrap": "^6.4.0",
-    "webpack": "^3.11.0"
+    "webpack-dev-server": "^3.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "webpack": "^3.12.0"
   }
 }

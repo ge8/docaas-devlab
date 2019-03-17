@@ -10,7 +10,6 @@ const LOGGING = 1
 const LOGGED = 2
 
 const mainUrl = "https://d276p75cmdbvss.cloudfront.net"
-// const mainUrl = "https://{restapi_id}.execute-api.us-west-2.amazonaws.com/Prod/"
 
 let logingPage = null;
 let controls = null;

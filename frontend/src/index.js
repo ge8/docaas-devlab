@@ -9,10 +9,8 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
     window.location = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
 }
 
-//Delete <h6> for multi-tenant!
 ReactDOM.render(
     <div className="App">
-        {/* <h6>Deck Of Cards As A Service!</h6>  */}
         <App />
     </div>, 
     document.getElementById('root')

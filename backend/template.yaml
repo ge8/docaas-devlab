@@ -640,4 +640,8 @@ Outputs:
   TheCloudFrontOriginAccessIdentity:
     Value: !Ref  TheCloudFrontOriginAccessIdentity
     Description: The CloudFront Origin Access Identity 
+  DomainName:
+    Value: !Ref DomainName
+    Description: Domain Name for the DoCaaS App
+
 

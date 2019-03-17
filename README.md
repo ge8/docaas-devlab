@@ -10,7 +10,10 @@ A private S3 bucket: SAMBUCKET
 
 # Lab Setup
 Clone repo: git clone https://github.com/ge8/docaas-summit
-Deploy backend environment: cd docaas-summit/backend && ./deploy-template.sh (Might take up to 30 min)
+Set SAMBUCKET in 2 scripts.
+Set DomainName in template param AND homepage.
+Set AcmCertificateArn in template.
+Deploy backend & app: cd docaas-summit/backend && ./deploy-template.sh (Might take up to 30 min)
 Check it out.
 
 # Lab 2: Access Control for SaaS plans

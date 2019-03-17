@@ -12,7 +12,7 @@ if (window.location.protocol !== 'https:' && window.location.hostname !== 'local
 //Delete <h6> for multi-tenant!
 ReactDOM.render(
     <div className="App">
-        <h6>Customer1</h6> 
+        {/* <h6>Deck Of Cards As A Service!</h6>  */}
         <App />
     </div>, 
     document.getElementById('root')

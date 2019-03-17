@@ -2,7 +2,7 @@
   "name": "docaas-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "summit.docaas.net",
+  "homepage": "https://summit.docaas.net",
   "dependencies": {
     "ajv": "^6.5.3",
     "aws-amplify": "^1.1.10",

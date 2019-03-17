@@ -19,7 +19,7 @@ cd ..
 # Grab DomainName from cloudformation output
 DOMAINNAME=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)
 # Configure DomainName in homepage (summit.docaas.net)
-find frontend/package.json -type f -exec sed -i -e "s/subdomain.domain.net/$DOMAINNAME/g" {} \;
+find frontend/package.json -type f -exec sed -i -e "s/summit.docaas.net/$DOMAINNAME/g" {} \;
 rm -f frontend/package.json-e 
 
 # Grab CloudfrontEndpoint from cloudformation output

@@ -4,6 +4,7 @@ In this session, we crack open the IDE to secure a multi-tenant SaaS platform bu
 # Machine prerequisites:
 Install and configure AWS CLI for ap-southeast-2 region
 Install and configure AWS SAM CLI for ap-southeast-2 region
+Install and configure AWS Amplify CLI for ap-southeast-2 region (?)
 A domain or subdomain name in AWS Route 53
 An AWS ACM certificate in the us-east-1 region for the domain name above.
 A private S3 bucket: SAMBUCKET

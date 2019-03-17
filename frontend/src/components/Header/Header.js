@@ -24,9 +24,9 @@ class Header extends React.Component {
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h1 className="App-title">Deck Of Cards As A Service</h1>
-        <Button onClick={this.handleClick} className="login" color={this.props.loginButtonColor} size="lg">
+        {/* <Button onClick={this.handleClick} className="login" color={this.props.loginButtonColor} size="lg">
           {this.props.loginButtonCaption}
-        </Button>
+        </Button> */}
       </div>
     );
   }

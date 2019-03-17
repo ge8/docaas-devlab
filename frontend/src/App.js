@@ -4,15 +4,20 @@ import MainBody from './components/MainBody/MainBody';
 import jwtDecode from 'jwt-decode';
 import './App.css';
 
+import { withAuthenticator } from 'aws-amplify-react';
+import Amplify, { Auth } from 'aws-amplify';
+import awsmobile from './aws-exports';
+Amplify.configure(awsmobile);
+
 const NOT_LOGGED = 0
 const LOGGING = 1
 const LOGGED = 2
 
-// Amplify.configure({
-//   Auth: {
-//     mandatorySignIn: true,
-//   }
-// });
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+  }
+});
 
 if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
   window.location = 'https://' + window.location.hostname + window.location.pathname + window.location.search;
@@ -38,33 +43,33 @@ class App extends Component {
 
   async getCurrentAuthToken() {
     // If Basic:
-    this.setState( { claims: { ["custom:plan"]:"silver" }});
-    return 'Basic ' + btoa(this.state.username + ":" + this.state.password);
+    // this.setState( { claims: { ["custom:plan"]:"silver" }});
+    // return 'Basic ' + btoa(this.state.username + ":" + this.state.password);
 
     // else if cognito: 
-    // if (this.state.jwt) {
-    //   return this.state.jwt;
-    // } else {
-    //   let session = await Auth.currentSession();
-    //   if (session && session.idToken) {
-    //     this.printIdentityId();
-    //     console.log("Identity JWT: " + session.idToken.jwtToken);
-    //     let claims = jwtDecode(session.idToken.jwtToken);
-    //     this.setState( {
-    //       'claims': claims,
-    //       'jwt': session.idToken.jwtToken,
-    //       'logingStatus': LOGGED
-    //     });
+    if (this.state.jwt) {
+      return this.state.jwt;
+    } else {
+      let session = await Auth.currentSession();
+      if (session && session.idToken) {
+        this.printIdentityId();
+        console.log("Identity JWT: " + session.idToken.jwtToken);
+        let claims = jwtDecode(session.idToken.jwtToken);
+        this.setState( {
+          'claims': claims,
+          'jwt': session.idToken.jwtToken,
+          'logingStatus': LOGGED
+        });
   
-    //     return session.idToken.jwtToken;
-    //   } else return null;
-    // }
+        return session.idToken.jwtToken;
+      } else return null;
+    }
   }
 
-  // async printIdentityId() {
-  //   let info = await Auth.currentUserInfo();
-  //   console.log("Identity ID:", info.id);
-  // }
+  async printIdentityId() {
+    let info = await Auth.currentUserInfo();
+    console.log("Identity ID:", info.id);
+  }
 
   handleLogging() {
     this.setState ({
@@ -96,4 +101,4 @@ class App extends Component {
   }
 }
 
-export default (App);
+export default withAuthenticator(App);

@@ -9,7 +9,7 @@ const USE_FIXED_VALUES = 0
 const LOGGING = 1
 const LOGGED = 2
 
-const mainUrl = "https://CUSTOMERGOESHERE.DOMAINGOESHERE.com"
+const mainUrl = "https://ENDPOINT.com"
 // const mainUrl = "https://{restapi_id}.execute-api.us-west-2.amazonaws.com/Prod/"
 
 let logingPage = null;

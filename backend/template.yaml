@@ -239,7 +239,7 @@ Resources:
       Roles:
         authenticated: !GetAtt CognitoAuthorizedRole.Arn
         unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
-  
+
   #LAMBDAS
   RoleForLambdas:
     Type: AWS::IAM::Role

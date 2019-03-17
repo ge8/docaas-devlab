@@ -29,4 +29,11 @@ echo $WEBBUCKET
 # Copy front-end public files to bucket
 aws s3 sync frontend/build/ "s3://$WEBBUCKET" --delete
 
+# Grab UserPoolID from cloudformation output
+USERPOOLID=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`UserPoolId`].OutputValue' --output text)
+# Create bronzeuser1, silveruser1, golduser1
+aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username bronzeuser1 --user-attributes Name=email,Value=thisisnotgerardosemail+bronzeuser1@gmail.com Name=email_verified,Value=true Name=custom:plan,Value=bronze --temporary-password Temporary1!
+aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username silveruser1 --user-attributes Name=email,Value=thisisnotgerardosemail+silveruser1@gmail.com Name=email_verified,Value=true Name=custom:plan,Value=silver --temporary-password Temporary1!
+aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username golduser1 --user-attributes Name=email,Value=thisisnotgerardosemail+golduser1@gmail.com Name=email_verified,Value=true Name=custom:plan,Value=gold --temporary-password Temporary1!
+
 

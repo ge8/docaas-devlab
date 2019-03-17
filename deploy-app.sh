@@ -13,7 +13,7 @@ rm -f frontend/package.json-e
 # Grab CloudfrontEndpoint from cloudformation output
 CF=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`CloudfrontEndpoint`].OutputValue' --output text)
 # Configure CF endpoint in MainBody
-find ./frontend/src/components/MainBody -type f -exec sed -i -e "s/ENDPOINT.com/$CF/g" {} \;
+find ./frontend/src/components/MainBody -type f -exec sed -i -e "s/d276p75cmdbvss.cloudfront.net/$CF/g" {} \;
 rm -f frontend/src/components/MainBody/MainBody.js-e frontend/src/components/MainBody/MainBody.css-e 
 
 # Build app

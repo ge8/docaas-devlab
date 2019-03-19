@@ -9,7 +9,7 @@ const USE_FIXED_VALUES = 0
 const LOGGING = 1
 const LOGGED = 2
 
-const mainUrl = "https://d276p75cmdbvss.cloudfront.net"
+const mainUrl = "https://dktoe4bhcl.execute-api.ap-southeast-2.amazonaws.com/Prod/"
 
 let logingPage = null;
 let controls = null;

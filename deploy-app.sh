@@ -10,10 +10,14 @@ DOMAINNAME=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Sta
 find frontend/package.json -type f -exec sed -i -e "s/summit.docaas.net/$DOMAINNAME/g" {} \;
 rm -f frontend/package.json-e 
 
-# Grab CloudfrontEndpoint from cloudformation output
-CF=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`CloudfrontEndpoint`].OutputValue' --output text)
-# Configure CF endpoint in MainBody
-find ./frontend/src/components/MainBody -type f -exec sed -i -e "s/d276p75cmdbvss.cloudfront.net/$CF/g" {} \;
+# Grab APIGW from cloudformation output
+APIGW=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`APIBaseURL`].OutputValue' --output text)
+
+# Configure APIGW endpoint in MainBody
+find ./frontend/src/components/MainBody -type f -exec sed -i -e "s/dktoe4bhcl/$APIGW/g" {} \;
+rm -f frontend/src/components/MainBody/MainBody.js-e frontend/src/components/MainBody/MainBody.css-e 
+# Configure region in APIGW endpoint in MainBody
+find ./frontend/src/components/MainBody -type f -exec sed -i -e "s/ap-southeast-2/$REGION/g" {} \;
 rm -f frontend/src/components/MainBody/MainBody.js-e frontend/src/components/MainBody/MainBody.css-e 
 
 # Build app

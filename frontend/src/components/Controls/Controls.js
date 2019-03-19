@@ -14,7 +14,7 @@ class Controls extends React.Component {
         this.handleGame = this.handleGame.bind(this);
         this.handleShuffle = this.handleShuffle.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        // this.handleCut = this.handleCut.bind(this);
+        this.handleCut = this.handleCut.bind(this);
     }
 
     handleCreate() {
@@ -49,11 +49,11 @@ class Controls extends React.Component {
             case "create": 
             case "get": 
             case "game": 
-                return true; // Always Allowed
+                return true; 
             case "shuffle": 
-                return plan === "silver"; //  || plan === "gold";
-            // case "cut": 
-            //     return plan === "gold"; // Always Allowed
+                return plan === "silver" || plan === "gold";
+            case "cut": 
+                return plan === "gold"; 
             default: 
                 return false;
         }
@@ -87,7 +87,7 @@ class Controls extends React.Component {
             {this.renderButton("get", "Get", "info", this.handleGet)}
             {this.renderButton("game", "Game", "warning", this.handleGame)}
             {this.renderButton("shuffle", "Shuffle", "danger", this.handleShuffle)}
-            {/* {this.renderButton("cut", "Cut", "primary", this.handleCut)} */}
+            {this.renderButton("cut", "Cut", "primary", this.handleCut)}
         </div>
     );
     }

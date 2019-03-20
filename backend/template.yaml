@@ -13,7 +13,8 @@ Parameters:
   AcmCertificateArn:
     Type: String
     Description: The ARN of the SSL certificate to use for the CloudFront distribution.
-    Default: arn:aws:acm:us-east-1:385251132543:certificate/44d3cf20-aca4-4d10-a458-023ac1fcec4a
+    # Default: arn:aws:acm:us-east-1:385251132543:certificate/44d3cf20-aca4-4d10-a458-023ac1fcec4a
+    Default: arn:aws:acm:us-east-1:385251132543:certificate/d79fe14c-ca45-473e-99ce-451921703e86
   DomainName:
     Type: String
     Description: The website domain name.
@@ -97,16 +98,28 @@ Resources:
         Comment: !Sub 'CloudFront OAI for ${DomainName}'
 
   #ROUTE53 Record
-  DNSRecord:
+  DNSRecordWebsite:
     Type: AWS::Route53::RecordSet
     Properties: 
       HostedZoneName: !Join ['', [!Ref 'DomainName', .]]
-      Comment: DNS record for Docaas App
+      Comment: DNS record for Docaas Website
       Name: !Ref 'DomainName'
       Type: A
       AliasTarget: 
-        DNSName: "d276p75cmdbvss.cloudfront.net."
+        DNSName: !GetAtt [TheCloudFrontDistribution, DomainName]
         HostedZoneId: Z2FDTNDATAQYW2
+
+  # DNSRecordAPI:
+  #   Type: AWS::Route53::RecordSet
+  #   Properties: 
+  #     HostedZoneName: !Join ['', [!Ref 'DomainName', .]]
+  #     Comment: DNS record for Docaas API
+  #     Name: !Join [ "", [ "api.", !Ref DomainName ] ]
+  #     Type: A
+  #     AliasTarget: 
+  #       DNSName: !Ref APIDomain
+  #       HostedZoneId: Z2FDTNDATAQYW2
+
 
   #COGNITO
   # Creates a role that allows Cognito to send SNS messages
@@ -326,20 +339,26 @@ Resources:
       Environment:
         Variables:
           IDENTITY_POOL_ID: !Ref IdentityPool
-  CorsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/
-      Runtime: nodejs8.10
-      Handler: cors.handle_request
-      FunctionName: DOCAAS_Cors
-      Role: !GetAtt RoleForLambdas.Arn
+  # CorsFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: src/
+  #     Runtime: nodejs8.10
+  #     Handler: cors.handle_request
+  #     FunctionName: DOCAAS_Cors
+  #     Role: !GetAtt RoleForLambdas.Arn
 
   #API GATEWAY
   RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
       Name: docaas-api
+  
+  APIDomain:
+    Type: AWS::ApiGateway::DomainName
+    Properties: 
+      CertificateArn: !Ref AcmCertificateArn
+      DomainName: !Join [ "", [ "api.", !Ref DomainName ] ]
 
   PlanAuthorizer: 
     Type: AWS::ApiGateway::Authorizer
@@ -378,13 +397,13 @@ Resources:
       RestApiId: !Ref "RestApi"
       StageName: Prod
 
-  InvokeCorsLambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "CorsFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
+  # InvokeCorsLambdaPermission:
+  #   Type: "AWS::Lambda::Permission"
+  #   Properties:
+  #     Action: "lambda:InvokeFunction"
+  #     FunctionName: !GetAtt "CorsFunction.Arn"
+  #     Principal: "apigateway.amazonaws.com"
+  #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
   # API GATEWAY RESOURCES
   GetDeckApiResource:
@@ -414,19 +433,49 @@ Resources:
       FunctionName: !GetAtt "GetDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
+  # GetDeckOptionsApiMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     HttpMethod: OPTIONS
+  #     AuthorizationType: NONE
+  #     ResourceId: !Ref GetDeckApiResource
+  #     RestApiId: !Ref RestApi
+  #     Integration:
+  #       Type: AWS_PROXY
+  #       IntegrationHttpMethod: POST
+  #       Uri: !Sub 
+  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
+
   GetDeckOptionsApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: OPTIONS
       AuthorizationType: NONE
-      ResourceId: !Ref GetDeckApiResource
       RestApiId: !Ref RestApi
+      ResourceId: !Ref GetDeckApiResource
+      HttpMethod: OPTIONS
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
+
 
   CreateDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -455,19 +504,19 @@ Resources:
       FunctionName: !GetAtt "CreateDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
-  CreateDeckOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      ResourceId: !Ref CreateDeckApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  # CreateDeckOptionsApiMethod:
+    # Type: AWS::ApiGateway::Method
+    # Properties:
+    #   HttpMethod: OPTIONS
+    #   AuthorizationType: NONE
+    #   ResourceId: !Ref CreateDeckApiResource
+    #   RestApiId: !Ref RestApi
+    #   Integration:
+    #     Type: AWS_PROXY
+    #     IntegrationHttpMethod: POST
+    #     Uri: !Sub 
+    #       - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+    #       - lambdaArn: !GetAtt "CorsFunction.Arn"
 
   ShuffleDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -496,19 +545,19 @@ Resources:
       FunctionName: !GetAtt "ShuffleDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/shuffle"
-  ShuffleDeckOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      ResourceId: !Ref ShuffleDeckApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  # ShuffleDeckOptionsApiMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     HttpMethod: OPTIONS
+  #     AuthorizationType: NONE
+  #     ResourceId: !Ref ShuffleDeckApiResource
+  #     RestApiId: !Ref RestApi
+  #     Integration:
+  #       Type: AWS_PROXY
+  #       IntegrationHttpMethod: POST
+  #       Uri: !Sub 
+  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
 
   CutDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -537,19 +586,19 @@ Resources:
       FunctionName: !GetAtt "CutDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
-  CutDeckOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      ResourceId: !Ref CutDeckApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  # CutDeckOptionsApiMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     HttpMethod: OPTIONS
+  #     AuthorizationType: NONE
+  #     ResourceId: !Ref CutDeckApiResource
+  #     RestApiId: !Ref RestApi
+  #     Integration:
+  #       Type: AWS_PROXY
+  #       IntegrationHttpMethod: POST
+  #       Uri: !Sub 
+  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
   
   GameApiResource:
     Type: AWS::ApiGateway::Resource
@@ -578,19 +627,19 @@ Resources:
       FunctionName: !GetAtt "GameFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
-  GameOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: OPTIONS
-      AuthorizationType: NONE
-      ResourceId: !Ref GameApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  # GameOptionsApiMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     HttpMethod: OPTIONS
+  #     AuthorizationType: NONE
+  #     ResourceId: !Ref GameApiResource
+  #     RestApiId: !Ref RestApi
+  #     Integration:
+  #       Type: AWS_PROXY
+  #       IntegrationHttpMethod: POST
+  #       Uri: !Sub 
+  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
 
   # DYNAMODB
   DynamoDecksTable:
@@ -643,5 +692,11 @@ Outputs:
   DomainName:
     Value: !Ref DomainName
     Description: Domain Name for the DoCaaS App
+  APIDomain1:
+    Value: !Ref APIDomain
+    Description: Domain name for APIGW using Ref
+  APIDomain2:
+    Value: !GetAtt [APIDomain, DistributionDomainName] 
+    Description: Domain name for APIGW unsing GetAtt
 
 

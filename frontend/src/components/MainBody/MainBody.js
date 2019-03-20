@@ -9,7 +9,8 @@ const USE_FIXED_VALUES = 0
 const LOGGING = 1
 const LOGGED = 2
 
-const mainUrl = "https://dktoe4bhcl.execute-api.ap-southeast-2.amazonaws.com/Prod/"
+const mainUrl = "https://api.summit.docaas.net"
+// const mainUrl = "https://dktoe4bhcl.execute-api.ap-southeast-2.amazonaws.com/Prod"
 
 let logingPage = null;
 let controls = null;
@@ -296,7 +297,7 @@ class MainBody extends React.Component {
         method: 'GET',
         mode: "cors",
         headers: { 
-          Authorization: authToken
+          Authorization: authToken,
         }
       })
     }).then(response => {

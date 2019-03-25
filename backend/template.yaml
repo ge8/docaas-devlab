@@ -233,6 +233,7 @@ Resources:
             Statement: 
               - Effect: "Allow"
                 Action:
+                  - "dynamodb:*"
                   - "mobileanalytics:PutEvents"
                   - "cognito-sync:*"
                   - "cognito-identity:*"

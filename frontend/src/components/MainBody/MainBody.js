@@ -9,8 +9,7 @@ const USE_FIXED_VALUES = 0
 const LOGGING = 1
 const LOGGED = 2
 
-const mainUrl = "https://api.summit.docaas.net"
-// const mainUrl = "https://dktoe4bhcl.execute-api.ap-southeast-2.amazonaws.com/Prod"
+const mainUrl = "https://dktoe4bhcl.execute-api.ap-southeast-2.amazonaws.com/Prod"
 
 let logingPage = null;
 let controls = null;
@@ -71,7 +70,7 @@ class MainBody extends React.Component {
     let message = "";
     this.blankCards();
 
-    this.callAPI(mainUrl + '/create', deckId).then(response => {
+    this.callAPI(mainUrl + '/create', deckId, 'POST').then(response => {
       fixedDeck.id = deckId;
   
       if (!USE_FIXED_VALUES) {
@@ -107,7 +106,7 @@ class MainBody extends React.Component {
     // console.log('API for Get');
     let message = "";
 
-    this.callAPI(mainUrl + '/get', deckId).then(response => { 
+    this.callAPI(mainUrl + '/get', deckId, 'GET').then(response => { 
       if(!USE_FIXED_VALUES) {
         if (response.name === "NOT_AUTHORIZED")  {
           message = "Not Authorized - check your username + password!";
@@ -154,7 +153,7 @@ class MainBody extends React.Component {
     let message = "";
     this.blankCards();
 
-    this.callAPI(mainUrl + '/game', deckId).then(response => {
+    this.callAPI(mainUrl + '/game', deckId, 'POST').then(response => {
       // {"cards":["6S","7C"],"scores":[6,3],"winner":1}
       if (!USE_FIXED_VALUES) {
         if (response.name === "NOT_AUTHORIZED")  {
@@ -202,7 +201,7 @@ class MainBody extends React.Component {
     // console.log('API for Shuffle');
     let message = "";
 
-    this.callAPI(mainUrl + '/shuffle', deckId).then(response => {
+    this.callAPI(mainUrl + '/shuffle', deckId, 'POST').then(response => {
       if (!USE_FIXED_VALUES) {
         if (response.name === "NOT_AUTHORIZED")  {
           message = "Not Authorized - check your username + password!";
@@ -248,7 +247,7 @@ class MainBody extends React.Component {
     // console.log('API for Cut');
     let message = "";
 
-    this.callAPI(mainUrl + '/cut', deckId).then(response => {
+    this.callAPI(mainUrl + '/cut', deckId, 'POST').then(response => {
       if (!USE_FIXED_VALUES) {
         if (response.name === "NOT_AUTHORIZED")  {
           message = "Not Authorized - check your username + password!";
@@ -291,11 +290,12 @@ class MainBody extends React.Component {
   }
 
 
-  callAPI(url, deckId) {
+  callAPI(url, deckId, themethod) {
     return this.props.getAuthToken().then((authToken) => {
       return fetch(url + "?deck=" + deckId, {
-        method: 'GET',
-        mode: "cors",
+        method: themethod,
+        // mode: "no-cors",
+        // mode: "cors",
         headers: { 
           Authorization: authToken,
         }

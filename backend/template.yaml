@@ -107,17 +107,6 @@ Resources:
         DNSName: !GetAtt [TheCloudFrontDistribution, DomainName]
         HostedZoneId: Z2FDTNDATAQYW2
 
-  # DNSRecordAPI:
-  #   Type: AWS::Route53::RecordSet
-  #   Properties: 
-  #     HostedZoneName: !Join ['', [!Ref 'DomainName', .]]
-  #     Comment: DNS record for Docaas API
-  #     Name: !Join [ "", [ "api.", !Ref DomainName ] ]
-  #     Type: A
-  #     AliasTarget: 
-  #       DNSName: !GetAtt [APIDomain, DistributionDomainName] 
-  #       HostedZoneId: Z2FDTNDATAQYW2
-
 
   #COGNITO
   # Creates a role that allows Cognito to send SNS messages
@@ -345,12 +334,6 @@ Resources:
     Properties:
       Name: docaas-api
   
-  # APIDomain:
-  #   Type: AWS::ApiGateway::DomainName
-  #   Properties: 
-  #     CertificateArn: !Ref AcmCertificateArn
-  #     DomainName: !Join [ "", [ "api.", !Ref DomainName ] ]
-
   PlanAuthorizer: 
     Type: AWS::ApiGateway::Authorizer
     Properties: 
@@ -431,7 +414,8 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
+            # method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
           ResponseTemplates:
             application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH
@@ -487,7 +471,8 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
+            # method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
           ResponseTemplates:
             application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH
@@ -543,7 +528,8 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
+            # method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
           ResponseTemplates:
             application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH
@@ -599,7 +585,8 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
+            # method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
           ResponseTemplates:
             application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH
@@ -655,7 +642,8 @@ Resources:
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
             method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
+            # method.response.header.Access-Control-Allow-Origin: "'*'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
           ResponseTemplates:
             application/json: ''
         PassthroughBehavior: WHEN_NO_MATCH

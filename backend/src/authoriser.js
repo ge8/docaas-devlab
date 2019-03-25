@@ -8,7 +8,7 @@ const ALLOWED_RESOURCES = {
     "bronze": ["/create", "/get", "/game"],
     "silver": ["/create", "/get", "/shuffle", "/game"],
     "gold": ["/create", "/get", "/shuffle", "/game", "/cut"]
-}
+};
 
 exports.authorise_request = async (event, context, callback) => {
     // Decode the JWT and grab the claims - these claims cannot be trusted until after validating with cognito

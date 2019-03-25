@@ -406,7 +406,7 @@ Resources:
   GetDeckApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: ANY
+      HttpMethod: GET
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GetDeckApiResource
@@ -462,7 +462,7 @@ Resources:
   CreateDeckApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: ANY
+      HttpMethod: POST
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CreateDeckApiResource
@@ -518,7 +518,7 @@ Resources:
   ShuffleDeckApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: ANY
+      HttpMethod: POST
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref ShuffleDeckApiResource
@@ -574,7 +574,7 @@ Resources:
   CutDeckApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: ANY
+      HttpMethod: POST
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CutDeckApiResource
@@ -630,7 +630,7 @@ Resources:
   GameApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: ANY
+      HttpMethod: POST
       AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GameApiResource

@@ -13,7 +13,7 @@ A private S3 bucket: SAMBUCKET
 Clone repo: git clone https://github.com/ge8/docaas-summit
 Set SAMBUCKET in 2 scripts.
 Set DomainName and AcmCertificateArn in template param.
-Deploy backend & app: cd docaas-summit/backend && ./deploy-template.sh (Might take up to 30 min)
+Deploy backend & app: cd docaas-summit/backend && ./deploy-template.sh (Might take up to 30 min) && ./deploy-app.sh
 Check it out.
 
 # Lab 2: Access Control for SaaS plans

@@ -13,7 +13,6 @@ Parameters:
   AcmCertificateArn:
     Type: String
     Description: The ARN of the SSL certificate to use for the CloudFront distribution.
-    # Default: arn:aws:acm:us-east-1:385251132543:certificate/44d3cf20-aca4-4d10-a458-023ac1fcec4a
     Default: arn:aws:acm:us-east-1:385251132543:certificate/d79fe14c-ca45-473e-99ce-451921703e86
   DomainName:
     Type: String
@@ -56,7 +55,6 @@ Resources:
       DistributionConfig:
         Aliases:
           - !Ref DomainName
-          # - !Join [ "", [ "*.", !Ref DomainName ] ]
         DefaultCacheBehavior:
           Compress: true
           ForwardedValues:
@@ -117,7 +115,7 @@ Resources:
   #     Name: !Join [ "", [ "api.", !Ref DomainName ] ]
   #     Type: A
   #     AliasTarget: 
-  #       DNSName: !Ref APIDomain
+  #       DNSName: !GetAtt [APIDomain, DistributionDomainName] 
   #       HostedZoneId: Z2FDTNDATAQYW2
 
 
@@ -339,14 +337,6 @@ Resources:
       Environment:
         Variables:
           IDENTITY_POOL_ID: !Ref IdentityPool
-  # CorsFunction:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: src/
-  #     Runtime: nodejs8.10
-  #     Handler: cors.handle_request
-  #     FunctionName: DOCAAS_Cors
-  #     Role: !GetAtt RoleForLambdas.Arn
 
   #API GATEWAY
   RestApi:
@@ -354,11 +344,11 @@ Resources:
     Properties:
       Name: docaas-api
   
-  APIDomain:
-    Type: AWS::ApiGateway::DomainName
-    Properties: 
-      CertificateArn: !Ref AcmCertificateArn
-      DomainName: !Join [ "", [ "api.", !Ref DomainName ] ]
+  # APIDomain:
+  #   Type: AWS::ApiGateway::DomainName
+  #   Properties: 
+  #     CertificateArn: !Ref AcmCertificateArn
+  #     DomainName: !Join [ "", [ "api.", !Ref DomainName ] ]
 
   PlanAuthorizer: 
     Type: AWS::ApiGateway::Authorizer
@@ -393,17 +383,18 @@ Resources:
     Type: "AWS::ApiGateway::Deployment"
     DependsOn:
       - "GetDeckApiMethod"
+      - "GetDeckOptionsApiMethod"
+      - "CreateDeckApiMethod"
+      - "CreateDeckOptionsApiMethod"
+      - "ShuffleDeckApiMethod"
+      - "ShuffleDeckOptionsApiMethod"
+      - "CutDeckApiMethod"
+      - "CutDeckOptionsApiMethod"
+      - "GameApiMethod"
+      - "GameOptionsApiMethod"
     Properties:
       RestApiId: !Ref "RestApi"
       StageName: Prod
-
-  # InvokeCorsLambdaPermission:
-  #   Type: "AWS::Lambda::Permission"
-  #   Properties:
-  #     Action: "lambda:InvokeFunction"
-  #     FunctionName: !GetAtt "CorsFunction.Arn"
-  #     Principal: "apigateway.amazonaws.com"
-  #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
   # API GATEWAY RESOURCES
   GetDeckApiResource:
@@ -426,27 +417,6 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "GetDeckFunction.Arn"
-  GetDeckInvokeLambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "GetDeckFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
-  # GetDeckOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     HttpMethod: OPTIONS
-  #     AuthorizationType: NONE
-  #     ResourceId: !Ref GetDeckApiResource
-  #     RestApiId: !Ref RestApi
-  #     Integration:
-  #       Type: AWS_PROXY
-  #       IntegrationHttpMethod: POST
-  #       Uri: !Sub 
-  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
-
   GetDeckOptionsApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -475,8 +445,14 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
-
-
+  GetDeckInvokeLambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "GetDeckFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
+  
   CreateDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -497,6 +473,34 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CreateDeckFunction.Arn"
+  CreateDeckOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref CreateDeckApiResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   CreateDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -504,19 +508,6 @@ Resources:
       FunctionName: !GetAtt "CreateDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
-  # CreateDeckOptionsApiMethod:
-    # Type: AWS::ApiGateway::Method
-    # Properties:
-    #   HttpMethod: OPTIONS
-    #   AuthorizationType: NONE
-    #   ResourceId: !Ref CreateDeckApiResource
-    #   RestApiId: !Ref RestApi
-    #   Integration:
-    #     Type: AWS_PROXY
-    #     IntegrationHttpMethod: POST
-    #     Uri: !Sub 
-    #       - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-    #       - lambdaArn: !GetAtt "CorsFunction.Arn"
 
   ShuffleDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -538,6 +529,34 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "ShuffleDeckFunction.Arn"
+  ShuffleDeckOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref ShuffleDeckApiResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   ShuffleDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -545,19 +564,6 @@ Resources:
       FunctionName: !GetAtt "ShuffleDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/shuffle"
-  # ShuffleDeckOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     HttpMethod: OPTIONS
-  #     AuthorizationType: NONE
-  #     ResourceId: !Ref ShuffleDeckApiResource
-  #     RestApiId: !Ref RestApi
-  #     Integration:
-  #       Type: AWS_PROXY
-  #       IntegrationHttpMethod: POST
-  #       Uri: !Sub 
-  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
 
   CutDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -579,6 +585,34 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CutDeckFunction.Arn"
+  CutDeckOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref CutDeckApiResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   CutDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -586,27 +620,14 @@ Resources:
       FunctionName: !GetAtt "CutDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
-  # CutDeckOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     HttpMethod: OPTIONS
-  #     AuthorizationType: NONE
-  #     ResourceId: !Ref CutDeckApiResource
-  #     RestApiId: !Ref RestApi
-  #     Integration:
-  #       Type: AWS_PROXY
-  #       IntegrationHttpMethod: POST
-  #       Uri: !Sub 
-  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
-  
+
   GameApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt RestApi.RootResourceId
       PathPart: game
       RestApiId: !Ref RestApi
-  GameApiApiMethod:
+  GameApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: ANY
@@ -620,6 +641,34 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "GameFunction.Arn"
+  GameOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref GameApiResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   GameInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -627,19 +676,9 @@ Resources:
       FunctionName: !GetAtt "GameFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
-  # GameOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     HttpMethod: OPTIONS
-  #     AuthorizationType: NONE
-  #     ResourceId: !Ref GameApiResource
-  #     RestApiId: !Ref RestApi
-  #     Integration:
-  #       Type: AWS_PROXY
-  #       IntegrationHttpMethod: POST
-  #       Uri: !Sub 
-  #         - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-  #         - lambdaArn: !GetAtt "CorsFunction.Arn"
+
+
+
 
   # DYNAMODB
   DynamoDecksTable:
@@ -692,11 +731,8 @@ Outputs:
   DomainName:
     Value: !Ref DomainName
     Description: Domain Name for the DoCaaS App
-  APIDomain1:
-    Value: !Ref APIDomain
-    Description: Domain name for APIGW using Ref
-  APIDomain2:
-    Value: !GetAtt [APIDomain, DistributionDomainName] 
-    Description: Domain name for APIGW unsing GetAtt
+  # APIDomain1:
+  #   Value: !GetAtt [APIDomain, DistributionDomainName] 
+  #   Description: Distribution URL for APIGW.
 
 

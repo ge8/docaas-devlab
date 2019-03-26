@@ -7,6 +7,7 @@ A Private S3 bucket for deployment purposes (SAMBUCKET)
 # Machine prerequisites:
 Install VS Code.
 Install and configure AWS CLI with the IAM credentials above and the default region (ap-southeast-2.)
+Google Chrome, Mozilla Firefox and Microsoft Edge - all installed.
 
 # Lab Setup
 Navigate to desktop folder and clone repo: 

@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export SAMBUCKET=docaas-summit
-export REGION=ap-southeast-2
-export STACK=docaas-summit
+. ./load-variables.sh
 
 # aws cloudformation delete-stack --stack-name $STACK
 # aws cloudformation wait stack-delete-complete --stack-name $STACK

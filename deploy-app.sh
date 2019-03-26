@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export SAMBUCKET=docaas-summit
-export REGION=ap-southeast-2
-export STACK=docaas-summit
+. ./load-variables.sh
 
 # Grab DomainName from cloudformation output
 DOMAINNAME=$(aws cloudformation describe-stacks --stack-name $STACK --query 'Stacks[0].Outputs[?OutputKey==`DomainName`].OutputValue' --output text)

@@ -9,7 +9,7 @@ Parameters:
   AuthName:
     Type: String
     Description: Unique Auth Name for Cognito Resources
-    Default: docaas
+    Default: docaas 
   AcmCertificateArn:
     Type: String
     Description: The ARN of the SSL certificate to use for the CloudFront distribution.
@@ -109,7 +109,6 @@ Resources:
 
 
   #COGNITO
-  # Creates a role that allows Cognito to send SNS messages
   SNSRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -131,7 +130,6 @@ Resources:
                 Action: "sns:publish"
                 Resource: "*"
 
-  # Creates a user pool in cognito for your app to auth against
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
@@ -151,7 +149,6 @@ Resources:
           AttributeDataType: String
           Mutable: true
   
-  # Creates a User Pool Client to be used by the identity pool
   UserPoolClient:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
@@ -159,7 +156,6 @@ Resources:
       GenerateSecret: false
       UserPoolId: !Ref UserPool
   
-  # Creates a federeated Identity pool
   IdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
@@ -169,7 +165,6 @@ Resources:
         - ClientId: !Ref UserPoolClient
           ProviderName: !GetAtt UserPool.ProviderName
 
-  # Create a role for unauthorized acces to AWS resources. Very limited access. Only allows users in the previously created Identity Pool
   CognitoUnAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -197,8 +192,6 @@ Resources:
                   - "cognito-sync:*"
                 Resource: "*"
 
-  # Create a role for authorized acces to AWS resources. Control what your user can access. This example only allows Lambda invokation
-  # Only allows users in the previously created Identity Pool
   CognitoAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -249,7 +242,6 @@ Resources:
         #         ForAllValues:StringLike:
         #           dynamodb:LeadingKeys: "${cognito-identity.amazonaws.com:sub}-*"  
 
-  # Assigns the roles to the Identity Pool
   IdentityPoolRoleMapping:
     Type: "AWS::Cognito::IdentityPoolRoleAttachment"
     Properties:
@@ -391,13 +383,13 @@ Resources:
       - "GetDeckApiMethod"
       - "GetDeckOptionsApiMethod"
       - "CreateDeckApiMethod"
-      # - "CreateDeckOptionsApiMethod"
+      - "CreateDeckOptionsApiMethod"
       - "ShuffleDeckApiMethod"
-      # - "ShuffleDeckOptionsApiMethod"
+      - "ShuffleDeckOptionsApiMethod"
       - "CutDeckApiMethod"
       # - "CutDeckOptionsApiMethod"
       - "GameApiMethod"
-      # - "GameOptionsApiMethod"
+      - "GameOptionsApiMethod"
     Properties:
       RestApiId: !Ref "RestApi"
       StageName: Prod
@@ -455,6 +447,7 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
   #       IntegrationResponses:
   #       - StatusCode: 200
   #         ResponseParameters:
@@ -467,7 +460,6 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #       Type: MOCK
   #     MethodResponses:
   #     - StatusCode: 200
   #       ResponseModels:
@@ -517,6 +509,7 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
   #       IntegrationResponses:
   #       - StatusCode: 200
   #         ResponseParameters:
@@ -529,7 +522,6 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #       Type: MOCK
   #     MethodResponses:
   #     - StatusCode: 200
   #       ResponseModels:
@@ -580,6 +572,7 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
   #       IntegrationResponses:
   #       - StatusCode: 200
   #         ResponseParameters:
@@ -592,7 +585,6 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #       Type: MOCK
   #     MethodResponses:
   #     - StatusCode: 200
   #       ResponseModels:
@@ -643,6 +635,7 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
   #       IntegrationResponses:
   #       - StatusCode: 200
   #         ResponseParameters:
@@ -655,7 +648,6 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #       Type: MOCK
   #     MethodResponses:
   #     - StatusCode: 200
   #       ResponseModels:
@@ -700,6 +692,7 @@ Resources:
   #     ResourceId: !Ref CutDeckApiResource
   #     HttpMethod: OPTIONS
   #     Integration:
+  #       Type: MOCK
   #       IntegrationResponses:
   #       - StatusCode: 200
   #         ResponseParameters:
@@ -712,7 +705,6 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #       Type: MOCK
   #     MethodResponses:
   #     - StatusCode: 200
   #       ResponseModels:
@@ -784,8 +776,6 @@ Outputs:
   DomainName:
     Value: !Ref DomainName
     Description: Domain Name for the DoCaaS App
-  # APIDomain1:
-  #   Value: !GetAtt [APIDomain, DistributionDomainName] 
-  #   Description: Distribution URL for APIGW.
+
 
 

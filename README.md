@@ -15,30 +15,31 @@ Open VS Code +
 
 * Check out CloudFormation resources using the AWS Console.
 
-# Lab 1: Access Control for SaaS plans
+# Lab 1: Browser Protection + Access Control based on SaaS plan attribute
 
 
-# Lab 3: Data Partitioning and Abstracting Security Complexity from Devs
+# Lab 2: Data Partitioning and Abstracting Security Complexity from Devs
 
 
 -------------------------
 
-# PLAN: setup
-No Authorizer.
-Deck access helper just writes based on identity-id with Lambda Role.
-DynamoDB (multiple customer structure) Deck writing takes identity ID & Lambda Role.
-Every user access to them all.
+# TO DO:
+## Lab0 to Lab1: Browser Protection + Access Control based on SaaS plan attribute
+(Optional) Prove cross access?
+No CORS in SAM template & react app. Does it work? -> Lab1: Add CORS to cf and react app.
 
-# Demo1: Multi-tenant plans + Access Control
-Plan attribute.
-Author Lambda Authoriser.
-Change APIGW to Lambda Authoriser.
-Deck access helper STILL just writes based on identity-id with Lambda Role.
-Test access.
+Prove all customers access it all regardless of plan with Insomnia.
+Cognito Access Control in template -> Lab1: Add Lambda Authoriser to SAM template.
+Optional while deploy: SAM CLI test Lambda Authoriser.
+
+## Lab1 to Lab2: Data Partitioning + Abstracting Dev Complexity.
+(Optional) Prove coding error in Lambda can break any customer
+Full Dynamo access in Cognito Auth Role -> Lab2: Add conditional policy.
+(OPTIONAL) identity-ids prepended already? Or make it happen by modifying deck access helper?
+
 
 # Demo 2: Data Partitioning + Abstracting Dev Complexity.
 Notice that Deck access helper STILL just writes based on identity-id with Lambda Role.
-Show Data Partitioning issue… Dev mistake. User A modifies User B.
 Modify Lambda Authorizer to return or use Context.
 New Policy for Cognito.
 Modify Deck-Data Helper to use this!

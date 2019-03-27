@@ -539,70 +539,6 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
 
-      
-  GameApiResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: game
-      RestApiId: !Ref RestApi
-  GameApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: POST
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref PlanAuthorizer
-      ResourceId: !Ref GameApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "GameFunction.Arn"
-  GameOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      RestApiId: !Ref RestApi
-      ResourceId: !Ref GameApiResource
-      HttpMethod: OPTIONS
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
-  GameInvokeLambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "GameFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
-
-
   ShuffleDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -722,8 +658,67 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
 
-
-
+  GameApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: game
+      RestApiId: !Ref RestApi
+  GameApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref PlanAuthorizer
+      ResourceId: !Ref GameApiResource
+      RestApiId: !Ref RestApi
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "GameFunction.Arn"
+  GameOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref GameApiResource
+      HttpMethod: OPTIONS
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
+  #       IntegrationResponses:
+  #       - StatusCode: 200
+  #         ResponseParameters:
+  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
+  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+  #         ResponseTemplates:
+  #           application/json: ''
+  #       PassthroughBehavior: WHEN_NO_MATCH
+  #       RequestTemplates:
+  #         application/json: '{"statusCode": 200}'
+  #     MethodResponses:
+  #     - StatusCode: 200
+  #       ResponseModels:
+  #         application/json: 'Empty'
+  #       ResponseParameters:
+  #         method.response.header.Access-Control-Allow-Headers: false
+  #         method.response.header.Access-Control-Allow-Methods: false
+  #         method.response.header.Access-Control-Allow-Origin: false
+  GameInvokeLambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "GameFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
 
 
   # DYNAMODB
@@ -777,6 +772,3 @@ Outputs:
   DomainName:
     Value: !Ref DomainName
     Description: Domain Name for the DoCaaS App
-
-
-

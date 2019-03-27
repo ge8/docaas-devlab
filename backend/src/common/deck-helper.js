@@ -6,7 +6,7 @@ class Helper {
     }
 
     asPublicDeck(deck) {
-        return { name:deck.name, cards:deck.cards };
+        return { name:deck.id, cards:deck.cards };
     }
 
     withCors(response) {

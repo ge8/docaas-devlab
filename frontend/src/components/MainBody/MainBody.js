@@ -309,7 +309,8 @@ class MainBody extends React.Component {
           return response.json();
         }
 
-        throw new Error('Request failed!');
+        // throw new Error('Request failed!');
+        throw alert('Deck does not exist!');
       }, networkError => console.log(networkError.message)
     );
   }

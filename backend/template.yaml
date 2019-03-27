@@ -231,7 +231,24 @@ Resources:
                 Action:
                   - "lambda:InvokeFunction"
                 Resource: "*"
-  
+        # - PolicyName: "CognitoAuthorizedPolicy2"
+        #   PolicyDocument: 
+        #     Version: '2012-10-17'
+        #     Statement:
+        #     - Effect: Allow
+        #       Action:
+        #       - dynamodb:PutItem
+        #       - dynamodb:DeleteItem
+        #       - dynamodb:GetItem
+        #       - dynamodb:Query
+        #       - dynamodb:UpdateItem
+        #       Resource:
+        #       - arn:aws:dynamodb:*:*:table/decks-master
+        #       - arn:aws:dynamodb:*:*:table/games-master
+        #       Condition:
+        #         ForAllValues:StringLike:
+        #           dynamodb:LeadingKeys: "${cognito-identity.amazonaws.com:sub}-*"  
+
   # Assigns the roles to the Identity Pool
   IdentityPoolRoleMapping:
     Type: "AWS::Cognito::IdentityPoolRoleAttachment"

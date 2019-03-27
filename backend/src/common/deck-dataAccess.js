@@ -6,8 +6,8 @@ function deckNameFromId(id) {
 function toDeck(data) {
     if (!data || !data.Item) return null;
     let id = data.Item.id.S;
-    let name = data.Item.deck ? data.Item.deck.S : deckNameFromId(data.Item.id.S);
-    let deck = { id:id, name:name, cards:[] };
+    let deck = { id:id, cards:[] };
+
     data.Item.cards.L.forEach(card => {
         deck.cards.push(card.S);
     });
@@ -17,7 +17,8 @@ function toDeck(data) {
 function fromDeck(deck, tenantId) {
     if (!deck) return null;
     let name = deck.name ? deck.name : deckNameFromId(deck.id);
-    let data = { id:{S:deck.id}, tenant:{S:tenantId}, deck: { S:name }, cards:{ L: [] } };
+    let data = { id:{S:deck.id}, cards:{ L: [] } };
+
     deck.cards.forEach(card => {
         data.cards.L.push({ S:card });
     });
@@ -25,7 +26,8 @@ function fromDeck(deck, tenantId) {
 }
 
 function initDeck(name, tenantId) {
-    let deck = { id:tenantId + "-" + name, name:name, tenant:tenantId, cards:[ ] };
+    let deck = { id: name, cards:[ ] };
+    // let deck = { id:tenantId + "-" + name, cards:[ ] };
     let suffixes = [ "S", "C", "D", "H" ];  // Spades, Clubs, Diamons, Hearts
     let cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" ];
     suffixes.forEach(suffix => {
@@ -40,7 +42,8 @@ exports.getDeck = async (ddb, tenantId, deckId) => {
     var params = {
         TableName: 'decks-master',
         Key: {
-            'id': { S: tenantId + '-' + deckId }
+            'id': { S: deckId }
+            // 'id': { S: tenantId + '-' + deckId }
         }
     };
 

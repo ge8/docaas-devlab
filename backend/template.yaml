@@ -325,17 +325,7 @@ Resources:
       Handler: game.demo_game_handler
       FunctionName: DOCAAS_Game
       Role: !GetAtt RoleForLambdas.Arn
-  AuthoriserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/
-      Runtime: nodejs8.10
-      Handler: authoriser.authorise_request
-      FunctionName: DOCAAS_Authoriser
-      Role: !GetAtt RoleForLambdas.Arn
-      Environment:
-        Variables:
-          IDENTITY_POOL_ID: !Ref IdentityPool
+
 
   #API GATEWAY
   RestApi:
@@ -367,15 +357,26 @@ Resources:
       #         - "Arn"
       #       - "/invocations"
 
+  # AuthoriserFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: src/
+  #     Runtime: nodejs8.10
+  #     Handler: authoriser.authorise_request
+  #     FunctionName: DOCAAS_Authoriser
+  #     Role: !GetAtt RoleForLambdas.Arn
+  #     Environment:
+  #       Variables:
+  #         IDENTITY_POOL_ID: !Ref IdentityPool
 
+  # AuthoriserInvokeLambdaPermission:
+  #   Type: "AWS::Lambda::Permission"
+  #   Properties:
+  #     Action: "lambda:InvokeFunction"
+  #     FunctionName: !GetAtt "AuthoriserFunction.Arn"
+  #     Principal: "apigateway.amazonaws.com"
+  #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
-  AuthoriserInvokeLambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "AuthoriserFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
   ApiGatewayDeployment:
     Type: "AWS::ApiGateway::Deployment"

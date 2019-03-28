@@ -339,9 +339,9 @@ Resources:
       Name: DocaasPlanAuthoriser
       RestApiId: !Ref RestApi
       IdentitySource: method.request.header.Authorization
-      Type: COGNITO_USER_POOLS
       ProviderARNs:
       - !GetAtt UserPool.Arn
+      Type: COGNITO_USER_POOLS
       # Type: TOKEN
       # AuthorizerCredentials: !GetAtt RoleForLambdas.Arn
       # AuthorizerResultTtlInSeconds: 60

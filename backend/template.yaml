@@ -427,6 +427,7 @@ Resources:
     Properties:
       HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GetDeckApiResource
       RestApiId: !Ref RestApi
@@ -489,6 +490,7 @@ Resources:
     Properties:
       HttpMethod: POST
       AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CreateDeckApiResource
       RestApiId: !Ref RestApi
@@ -551,6 +553,7 @@ Resources:
     Properties:
       HttpMethod: POST
       AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref ShuffleDeckApiResource
       RestApiId: !Ref RestApi
@@ -613,6 +616,7 @@ Resources:
     Properties:
       HttpMethod: POST
       AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CutDeckApiResource
       RestApiId: !Ref RestApi
@@ -670,6 +674,7 @@ Resources:
     Properties:
       HttpMethod: POST
       AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GameApiResource
       RestApiId: !Ref RestApi

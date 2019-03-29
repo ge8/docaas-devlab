@@ -9,8 +9,8 @@ class DAHelper {
             this._creds = new this._aws.Credentials(this.event.credentials.accessKeyId, this.event.credentials.secretAccessKey, this.event.credentials.sessionToken);
             this._identityId = this.event.credentials.identityId;
             this._aws.config.credentials = this._creds;
-        } else {
-            throw new Error("No credentials provided by the invoker - cannot proceed!");
+        // } else {
+        //     throw new Error("No credentials provided by the invoker - cannot proceed!");
         }
     }
 

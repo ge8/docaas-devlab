@@ -268,6 +268,7 @@ Resources:
       ManagedPolicyArns: 
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+        - arn:aws:iam::aws:policy/AdministratorAccess
 
   DeckDataAccessFunction:
     Type: AWS::Serverless::Function
@@ -425,7 +426,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: GET
-      AuthorizationType: CUSTOM
+      AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GetDeckApiResource
       RestApiId: !Ref RestApi
@@ -487,7 +488,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: CUSTOM
+      AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CreateDeckApiResource
       RestApiId: !Ref RestApi
@@ -549,7 +550,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: CUSTOM
+      AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref ShuffleDeckApiResource
       RestApiId: !Ref RestApi
@@ -611,7 +612,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: CUSTOM
+      AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CutDeckApiResource
       RestApiId: !Ref RestApi
@@ -668,7 +669,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: CUSTOM
+      AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GameApiResource
       RestApiId: !Ref RestApi

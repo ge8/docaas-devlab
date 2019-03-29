@@ -31,7 +31,7 @@ class Helper {
     }
 
     get plan() {
-        return this.event.requestContext.authorizer.plan;
+        return this.event.requestContext && this.event.requestContext.authorizer && this.event.requestContext.authorizer.plan ? this.event.requestContext.authorizer.plan : "gold";
     }
 
     getParam(name) {
@@ -45,13 +45,16 @@ class Helper {
         let data = {
             plan: this.plan,
             method: method,
-            credentials: {
+            params: params
+        }
+        // If credentals provided in context, then use them
+        if (this.event.requestContext && this.event.requestContext.authorizer && this.event.requestContext.authorizer.accessKeyId) {
+            data.credentials = {
                 accessKeyId: this.event.requestContext.authorizer.accessKeyId, 
                 secretAccessKey: this.event.requestContext.authorizer.secretAccessKey, 
                 sessionToken: this.event.requestContext.authorizer.sessionToken, 
                 identityId: this.event.requestContext.authorizer.identityId
-            },
-            params: params
+            }
         }
         
         let lambda = new aws.Lambda();

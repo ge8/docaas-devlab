@@ -463,14 +463,14 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   GetDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -526,14 +526,14 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   CreateDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -589,14 +589,14 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   ShuffleDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -710,14 +710,14 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
   GameInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:

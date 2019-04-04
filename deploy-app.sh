@@ -55,4 +55,8 @@ aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username bronze1 
 aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username silver1 --user-attributes Name=email,Value=thisisnotgerardosemail+silver1@gmail.com Name=email_verified,Value=true Name=custom:plan,Value=silver --temporary-password Temporary1!
 aws cognito-idp admin-create-user --user-pool-id $USERPOOLID --username gold1 --user-attributes Name=email,Value=thisisnotgerardosemail+gold1@gmail.com Name=email_verified,Value=true Name=custom:plan,Value=gold --temporary-password Temporary1!
 
+# Sign users out bronze1, silver1, gold1
+aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username bronze1
+aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username silver1
+aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username gold1
 

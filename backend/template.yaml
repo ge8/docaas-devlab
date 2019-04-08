@@ -456,7 +456,6 @@ Resources:
   #         ResponseParameters:
   #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
   #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
   #         ResponseTemplates:
   #           application/json: ''
@@ -479,6 +478,7 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
   
+
   CreateDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -519,7 +519,6 @@ Resources:
   #         ResponseParameters:
   #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
   #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
   #         ResponseTemplates:
   #           application/json: ''
@@ -541,6 +540,7 @@ Resources:
       FunctionName: !GetAtt "CreateDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
+
 
   ShuffleDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -582,7 +582,6 @@ Resources:
   #         ResponseParameters:
   #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
   #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
   #         ResponseTemplates:
   #           application/json: ''
@@ -604,6 +603,7 @@ Resources:
       FunctionName: !GetAtt "ShuffleDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/shuffle"
+
 
   CutDeckApiResource:
     Type: AWS::ApiGateway::Resource
@@ -640,7 +640,6 @@ Resources:
   #         ResponseParameters:
   #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
   #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
   #         ResponseTemplates:
   #           application/json: ''
@@ -662,6 +661,7 @@ Resources:
       FunctionName: !GetAtt "CutDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
+
 
   GameApiResource:
     Type: AWS::ApiGateway::Resource
@@ -703,7 +703,6 @@ Resources:
   #         ResponseParameters:
   #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
   #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           # method.response.header.Access-Control-Allow-Origin: "'*'"
   #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
   #         ResponseTemplates:
   #           application/json: ''
@@ -725,6 +724,7 @@ Resources:
       FunctionName: !GetAtt "GameFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
+
 
 
   # DYNAMODB

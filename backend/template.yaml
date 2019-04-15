@@ -229,7 +229,7 @@ Resources:
         #       - dynamodb:UpdateItem
         #       Resource:
         #       - arn:aws:dynamodb:*:*:table/decks-master
-        #       - arn:aws:dynamodb:*:*:table/games-master
+        #       - arn:aws:dynamodb:*:*:table/scores-master
         #       Condition:
         #         ForAllValues:StringLike:
         #           dynamodb:LeadingKeys: "${cognito-identity.amazonaws.com:sub}-*"  

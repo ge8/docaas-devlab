@@ -382,7 +382,7 @@ Resources:
   #     Principal: "apigateway.amazonaws.com"
   #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
-# CORS LAMBDA FUNCTION
+  # CORS LAMBDA FUNCTION
   CorsFunction:
     Type: AWS::Serverless::Function
     Properties:

@@ -382,7 +382,7 @@ Resources:
   #     Principal: "apigateway.amazonaws.com"
   #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
-  # CORS LAMBDA FUNCTION
+  #CORS LAMBDA FUNCTION
   CorsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -399,7 +399,7 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
-  # API GATEWAY RESOURCES
+  #API GATEWAY RESOURCES
   CreateDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
@@ -705,7 +705,7 @@ Resources:
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
 
-  # DYNAMODB
+  #DYNAMODB
   DynamoDecksTable:
     Type: AWS::Serverless::SimpleTable
     Properties:

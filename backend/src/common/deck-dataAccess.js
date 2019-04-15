@@ -26,8 +26,8 @@ function fromDeck(deck, tenantId) {
 }
 
 function initDeck(name, tenantId) {
-    let deck = { id: name, cards:[ ] };
-    // let deck = { id:tenantId + "-" + name, cards:[ ] };
+    // let deck = { id: name, cards:[ ] };
+    let deck = { id:tenantId + "-" + name, cards:[ ] };
     let suffixes = [ "S", "C", "D", "H" ];  // Spades, Clubs, Diamons, Hearts
     let cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" ];
     suffixes.forEach(suffix => {
@@ -42,8 +42,8 @@ exports.getDeck = async (ddb, tenantId, deckId) => {
     var params = {
         TableName: 'decks-master',
         Key: {
-            'id': { S: deckId }
-            // 'id': { S: tenantId + '-' + deckId }
+            // 'id': { S: deckId }
+            'id': { S: tenantId + '-' + deckId }
         }
     };
 

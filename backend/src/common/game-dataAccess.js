@@ -3,8 +3,8 @@ exports.getScores = async (ddb, tenantId, deckId) => {
     var params = {
         TableName: 'games-master',
         Key: {
-            // 'id': { S:tenantId + "-" + deckId }
-            'id': { S: deckId }
+            'id': { S:tenantId + "-" + deckId }
+            // 'id': { S: deckId }
         }
     };
 
@@ -29,8 +29,8 @@ exports.getScores = async (ddb, tenantId, deckId) => {
 
 exports.saveScores = async (ddb, tenantId, deckId, scores) => {
     let item = {
-        // 'id': { S:tenantId + "-" + deckId },
-        'id': { S: deckId },
+        'id': { S:tenantId + "-" + deckId },
+        // 'id': { S: deckId },
 
         scores: { L: [ ] }
     };

@@ -259,7 +259,7 @@ Resources:
       ManagedPolicyArns: 
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
-        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+        # - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
 
   CreateDeckFunction:
     Type: AWS::Serverless::Function
@@ -331,21 +331,21 @@ Resources:
       IdentitySource: method.request.header.Authorization
       ProviderARNs:
       - !GetAtt UserPool.Arn
-      Type: COGNITO_USER_POOLS
-      # Type: TOKEN
-      # AuthorizerCredentials: !GetAtt RoleForLambdas.Arn
-      # AuthorizerResultTtlInSeconds: 60
-      # AuthorizerUri: 
-      #   Fn::Join: 
-      #     - ""
-      #     - 
-      #       - "arn:aws:apigateway:"
-      #       - Ref: AWS::Region
-      #       - ":lambda:path/2015-03-31/functions/"
-      #       - Fn::GetAtt: 
-      #         - "AuthoriserFunction"
-      #         - "Arn"
-      #       - "/invocations"
+      # Type: COGNITO_USER_POOLS
+      Type: TOKEN
+      AuthorizerCredentials: !GetAtt RoleForLambdas.Arn
+      AuthorizerResultTtlInSeconds: 60
+      AuthorizerUri: 
+        Fn::Join: 
+          - ""
+          - 
+            - "arn:aws:apigateway:"
+            - Ref: AWS::Region
+            - ":lambda:path/2015-03-31/functions/"
+            - Fn::GetAtt: 
+              - "AuthoriserFunction"
+              - "Arn"
+            - "/invocations"
   ApiGatewayDeployment:
     Type: "AWS::ApiGateway::Deployment"
     DependsOn:
@@ -363,41 +363,41 @@ Resources:
       RestApiId: !Ref "RestApi"
       StageName: Prod
 
-  # AuthoriserFunction:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: src/
-  #     Runtime: nodejs8.10
-  #     Handler: authoriser.authorise_request
-  #     FunctionName: DOCAAS_Authoriser
-  #     Role: !GetAtt RoleForLambdas.Arn
-  #     Environment:
-  #       Variables:
-  #         IDENTITY_POOL_ID: !Ref IdentityPool
-  # AuthoriserInvokeLambdaPermission:
-  #   Type: "AWS::Lambda::Permission"
-  #   Properties:
-  #     Action: "lambda:InvokeFunction"
-  #     FunctionName: !GetAtt "AuthoriserFunction.Arn"
-  #     Principal: "apigateway.amazonaws.com"
-  #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
-
-# CORS LAMBDA FUNCTION
-  CorsFunction:
+  AuthoriserFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/
       Runtime: nodejs8.10
-      Handler: cors.handle_request
-      FunctionName: DOCAAS_Cors
+      Handler: authoriser.authorise_request
+      FunctionName: DOCAAS_Authoriser
       Role: !GetAtt RoleForLambdas.Arn
-  InvokeCorsLambdaPermission:
+      Environment:
+        Variables:
+          IDENTITY_POOL_ID: !Ref IdentityPool
+  AuthoriserInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "CorsFunction.Arn"
+      FunctionName: !GetAtt "AuthoriserFunction.Arn"
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
+
+# CORS LAMBDA FUNCTION
+  # CorsFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: src/
+  #     Runtime: nodejs8.10
+  #     Handler: cors.handle_request
+  #     FunctionName: DOCAAS_Cors
+  #     Role: !GetAtt RoleForLambdas.Arn
+  # InvokeCorsLambdaPermission:
+  #   Type: "AWS::Lambda::Permission"
+  #   Properties:
+  #     Action: "lambda:InvokeFunction"
+  #     FunctionName: !GetAtt "CorsFunction.Arn"
+  #     Principal: "apigateway.amazonaws.com"
+  #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
   # API GATEWAY RESOURCES
   CreateDeckInvokeLambdaPermission:
@@ -417,8 +417,8 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
+      # AuthorizationType: COGNITO_USER_POOLS
+      AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CreateDeckApiResource
       RestApiId: !Ref RestApi
@@ -444,23 +444,23 @@ Resources:
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub 
+        #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #   - lambdaArn: !GetAtt "CorsFunction.Arn"
+        Type: MOCK
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
 
   GetDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
@@ -479,8 +479,8 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: GET
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
+      # AuthorizationType: COGNITO_USER_POOLS
+      AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GetDeckApiResource
       RestApiId: !Ref RestApi
@@ -506,23 +506,23 @@ Resources:
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub 
+        #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #   - lambdaArn: !GetAtt "CorsFunction.Arn"
+        Type: MOCK
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
 
   GameInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
@@ -541,8 +541,8 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
+      # AuthorizationType: COGNITO_USER_POOLS
+      AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref GameApiResource
       RestApiId: !Ref RestApi
@@ -568,23 +568,23 @@ Resources:
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub 
+        #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #   - lambdaArn: !GetAtt "CorsFunction.Arn"
+        Type: MOCK
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
   
   ShuffleDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
@@ -603,8 +603,8 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
+      # AuthorizationType: COGNITO_USER_POOLS
+      AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref ShuffleDeckApiResource
       RestApiId: !Ref RestApi
@@ -630,23 +630,23 @@ Resources:
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub 
+        #   - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+        #   - lambdaArn: !GetAtt "CorsFunction.Arn"
+        Type: MOCK
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
   
   CutDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
@@ -665,8 +665,8 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       HttpMethod: POST
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
+      # AuthorizationType: COGNITO_USER_POOLS
+      AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
       ResourceId: !Ref CutDeckApiResource
       RestApiId: !Ref RestApi
@@ -676,34 +676,34 @@ Resources:
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
           - lambdaArn: !GetAtt "CutDeckFunction.Arn"
-  # CutDeckOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     AuthorizationType: NONE
-  #     RestApiId: !Ref RestApi
-  #     ResourceId: !Ref CutDeckApiResource
-  #     HttpMethod: OPTIONS
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
-  #     Integration:
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
+  CutDeckOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref CutDeckApiResource
+      HttpMethod: OPTIONS
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
 
   # DYNAMODB
   DynamoDecksTable:

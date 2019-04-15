@@ -33,7 +33,6 @@ Resources:
       Tags:
         - Key: Domain
           Value: !Ref DomainName
-
   TheBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -88,7 +87,6 @@ Resources:
       Tags:
         - Key: Domain
           Value: !Ref DomainName
-
   TheCloudFrontOriginAccessIdentity:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:
@@ -106,7 +104,6 @@ Resources:
       AliasTarget: 
         DNSName: !GetAtt [TheCloudFrontDistribution, DomainName]
         HostedZoneId: Z2FDTNDATAQYW2
-
 
   #COGNITO
   SNSRole:
@@ -129,7 +126,6 @@ Resources:
               - Effect: "Allow"
                 Action: "sns:publish"
                 Resource: "*"
-
   UserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
@@ -148,14 +144,12 @@ Resources:
         - Name: plan
           AttributeDataType: String
           Mutable: true
-  
   UserPoolClient:
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
       ClientName: !Sub ${AuthName}-client
       GenerateSecret: false
       UserPoolId: !Ref UserPool
-  
   IdentityPool:
     Type: "AWS::Cognito::IdentityPool"
     Properties:
@@ -164,7 +158,6 @@ Resources:
       CognitoIdentityProviders: 
         - ClientId: !Ref UserPoolClient
           ProviderName: !GetAtt UserPool.ProviderName
-
   CognitoUnAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -191,7 +184,6 @@ Resources:
                   - "mobileanalytics:PutEvents"
                   - "cognito-sync:*"
                 Resource: "*"
-
   CognitoAuthorizedRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -241,7 +233,6 @@ Resources:
         #       Condition:
         #         ForAllValues:StringLike:
         #           dynamodb:LeadingKeys: "${cognito-identity.amazonaws.com:sub}-*"  
-
   IdentityPoolRoleMapping:
     Type: "AWS::Cognito::IdentityPoolRoleAttachment"
     Properties:
@@ -268,24 +259,8 @@ Resources:
       ManagedPolicyArns: 
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
-        - arn:aws:iam::aws:policy/AdministratorAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
 
-  DeckDataAccessFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/
-      Runtime: nodejs8.10
-      Handler: deck-da.deck_data_access
-      FunctionName: DOCAAS_DeckDataAccess
-      Role: !GetAtt RoleForLambdas.Arn
-  GameDataAccessFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: src/
-      Runtime: nodejs8.10
-      Handler: game-da.game_data_access
-      FunctionName: DOCAAS_GameDataAccess
-      Role: !GetAtt RoleForLambdas.Arn
   CreateDeckFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -301,6 +276,14 @@ Resources:
       Runtime: nodejs8.10
       Handler: get.get_deck_handler
       FunctionName: DOCAAS_GetDeck
+      Role: !GetAtt RoleForLambdas.Arn
+  GameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Runtime: nodejs8.10
+      Handler: game.demo_game_handler
+      FunctionName: DOCAAS_Game
       Role: !GetAtt RoleForLambdas.Arn
   ShuffleDeckFunction:
     Type: AWS::Serverless::Function
@@ -318,22 +301,28 @@ Resources:
       Handler: cut.cut_deck_handler
       FunctionName: DOCAAS_CutDeck
       Role: !GetAtt RoleForLambdas.Arn
-  GameFunction:
+  DeckDataAccessFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/
       Runtime: nodejs8.10
-      Handler: game.demo_game_handler
-      FunctionName: DOCAAS_Game
+      Handler: deck-da.deck_data_access
+      FunctionName: DOCAAS_DeckDataAccess
       Role: !GetAtt RoleForLambdas.Arn
-
-
+  GameDataAccessFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Runtime: nodejs8.10
+      Handler: game-da.game_data_access
+      FunctionName: DOCAAS_GameDataAccess
+      Role: !GetAtt RoleForLambdas.Arn
+  
   #API GATEWAY
   RestApi:
     Type: AWS::ApiGateway::RestApi
     Properties:
-      Name: docaas-api
-  
+      Name: docaas-api  
   PlanAuthorizer: 
     Type: AWS::ApiGateway::Authorizer
     Properties: 
@@ -357,6 +346,22 @@ Resources:
       #         - "AuthoriserFunction"
       #         - "Arn"
       #       - "/invocations"
+  ApiGatewayDeployment:
+    Type: "AWS::ApiGateway::Deployment"
+    DependsOn:
+      - "CreateDeckApiMethod"
+      - "CreateDeckOptionsApiMethod"
+      - "GetDeckApiMethod"
+      - "GetDeckOptionsApiMethod"
+      - "GameApiMethod"
+      - "GameOptionsApiMethod"
+      - "ShuffleDeckApiMethod"
+      - "ShuffleDeckOptionsApiMethod"
+      - "CutDeckApiMethod"
+      # - "CutDeckOptionsApiMethod"  
+    Properties:
+      RestApiId: !Ref "RestApi"
+      StageName: Prod
 
   # AuthoriserFunction:
   #   Type: AWS::Serverless::Function
@@ -369,7 +374,6 @@ Resources:
   #     Environment:
   #       Variables:
   #         IDENTITY_POOL_ID: !Ref IdentityPool
-
   # AuthoriserInvokeLambdaPermission:
   #   Type: "AWS::Lambda::Permission"
   #   Properties:
@@ -377,25 +381,6 @@ Resources:
   #     FunctionName: !GetAtt "AuthoriserFunction.Arn"
   #     Principal: "apigateway.amazonaws.com"
   #     SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
-
-
-  ApiGatewayDeployment:
-    Type: "AWS::ApiGateway::Deployment"
-    DependsOn:
-      - "GetDeckApiMethod"
-      - "GetDeckOptionsApiMethod"
-      - "CreateDeckApiMethod"
-      - "CreateDeckOptionsApiMethod"
-      - "ShuffleDeckApiMethod"
-      - "ShuffleDeckOptionsApiMethod"
-      - "CutDeckApiMethod"
-      # - "CutDeckOptionsApiMethod"
-      - "GameApiMethod"
-      - "GameOptionsApiMethod"
-    Properties:
-      RestApiId: !Ref "RestApi"
-      StageName: Prod
-
 
 # CORS LAMBDA FUNCTION
   CorsFunction:
@@ -414,71 +399,14 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/*"
 
-
   # API GATEWAY RESOURCES
-  GetDeckApiResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: get
-      RestApiId: !Ref RestApi
-  GetDeckApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: GET
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
-      AuthorizerId: !Ref PlanAuthorizer
-      ResourceId: !Ref GetDeckApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "GetDeckFunction.Arn"
-  GetDeckOptionsApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      RestApiId: !Ref RestApi
-      ResourceId: !Ref GetDeckApiResource
-      HttpMethod: OPTIONS
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CorsFunction.Arn"
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
-      MethodResponses:
-      - StatusCode: 200
-        ResponseModels:
-          application/json: 'Empty'
-        ResponseParameters:
-          method.response.header.Access-Control-Allow-Headers: false
-          method.response.header.Access-Control-Allow-Methods: false
-          method.response.header.Access-Control-Allow-Origin: false
-  GetDeckInvokeLambdaPermission:
+  CreateDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "GetDeckFunction.Arn"
+      FunctionName: !GetAtt "CreateDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
-  
-
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
   CreateDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -507,6 +435,14 @@ Resources:
       RestApiId: !Ref RestApi
       ResourceId: !Ref CreateDeckApiResource
       HttpMethod: OPTIONS
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
@@ -525,51 +461,50 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-      MethodResponses:
-      - StatusCode: 200
-        ResponseModels:
-          application/json: 'Empty'
-        ResponseParameters:
-          method.response.header.Access-Control-Allow-Headers: false
-          method.response.header.Access-Control-Allow-Methods: false
-          method.response.header.Access-Control-Allow-Origin: false
-  CreateDeckInvokeLambdaPermission:
+
+  GetDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "CreateDeckFunction.Arn"
+      FunctionName: !GetAtt "GetDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/create"
-
-
-  ShuffleDeckApiResource:
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/get"
+  GetDeckApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: shuffle
+      PathPart: get
       RestApiId: !Ref RestApi
-  ShuffleDeckApiMethod:
+  GetDeckApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      HttpMethod: POST
+      HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
       # AuthorizationType: CUSTOM
       AuthorizerId: !Ref PlanAuthorizer
-      ResourceId: !Ref ShuffleDeckApiResource
+      ResourceId: !Ref GetDeckApiResource
       RestApiId: !Ref RestApi
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
         Uri: !Sub 
           - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "ShuffleDeckFunction.Arn"
-  ShuffleDeckOptionsApiMethod:
+          - lambdaArn: !GetAtt "GetDeckFunction.Arn"
+  GetDeckOptionsApiMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
       RestApiId: !Ref RestApi
-      ResourceId: !Ref ShuffleDeckApiResource
+      ResourceId: !Ref GetDeckApiResource
       HttpMethod: OPTIONS
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
@@ -588,81 +523,14 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
-      MethodResponses:
-      - StatusCode: 200
-        ResponseModels:
-          application/json: 'Empty'
-        ResponseParameters:
-          method.response.header.Access-Control-Allow-Headers: false
-          method.response.header.Access-Control-Allow-Methods: false
-          method.response.header.Access-Control-Allow-Origin: false
-  ShuffleDeckInvokeLambdaPermission:
+
+  GameInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "ShuffleDeckFunction.Arn"
+      FunctionName: !GetAtt "GameFunction.Arn"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/shuffle"
-
-
-  CutDeckApiResource:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt RestApi.RootResourceId
-      PathPart: cut
-      RestApiId: !Ref RestApi
-  CutDeckApiMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: POST
-      AuthorizationType: COGNITO_USER_POOLS
-      # AuthorizationType: CUSTOM
-      AuthorizerId: !Ref PlanAuthorizer
-      ResourceId: !Ref CutDeckApiResource
-      RestApiId: !Ref RestApi
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub 
-          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
-          - lambdaArn: !GetAtt "CutDeckFunction.Arn"
-  # CutDeckOptionsApiMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     AuthorizationType: NONE
-  #     RestApiId: !Ref RestApi
-  #     ResourceId: !Ref CutDeckApiResource
-  #     HttpMethod: OPTIONS
-  #     Integration:
-  #       Type: MOCK
-  #       IntegrationResponses:
-  #       - StatusCode: 200
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
-  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
-  #         ResponseTemplates:
-  #           application/json: ''
-  #       PassthroughBehavior: WHEN_NO_MATCH
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
-  #     MethodResponses:
-  #     - StatusCode: 200
-  #       ResponseModels:
-  #         application/json: 'Empty'
-  #       ResponseParameters:
-  #         method.response.header.Access-Control-Allow-Headers: false
-  #         method.response.header.Access-Control-Allow-Methods: false
-  #         method.response.header.Access-Control-Allow-Origin: false
-  CutDeckInvokeLambdaPermission:
-    Type: "AWS::Lambda::Permission"
-    Properties:
-      Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "CutDeckFunction.Arn"
-      Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
-
-
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
   GameApiResource:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -691,6 +559,14 @@ Resources:
       RestApiId: !Ref RestApi
       ResourceId: !Ref GameApiResource
       HttpMethod: OPTIONS
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
       Integration:
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
@@ -709,6 +585,42 @@ Resources:
   #       PassthroughBehavior: WHEN_NO_MATCH
   #       RequestTemplates:
   #         application/json: '{"statusCode": 200}'
+  
+  ShuffleDeckInvokeLambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !GetAtt "ShuffleDeckFunction.Arn"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/shuffle"
+  ShuffleDeckApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: shuffle
+      RestApiId: !Ref RestApi
+  ShuffleDeckApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
+      AuthorizerId: !Ref PlanAuthorizer
+      ResourceId: !Ref ShuffleDeckApiResource
+      RestApiId: !Ref RestApi
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "ShuffleDeckFunction.Arn"
+  ShuffleDeckOptionsApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref RestApi
+      ResourceId: !Ref ShuffleDeckApiResource
+      HttpMethod: OPTIONS
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
@@ -717,15 +629,81 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
-  GameInvokeLambdaPermission:
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "CorsFunction.Arn"
+  #       Type: MOCK
+  #       IntegrationResponses:
+  #       - StatusCode: 200
+  #         ResponseParameters:
+  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+  #         ResponseTemplates:
+  #           application/json: ''
+  #       PassthroughBehavior: WHEN_NO_MATCH
+  #       RequestTemplates:
+  #         application/json: '{"statusCode": 200}'
+  
+  CutDeckInvokeLambdaPermission:
     Type: "AWS::Lambda::Permission"
     Properties:
       Action: "lambda:InvokeFunction"
-      FunctionName: !GetAtt "GameFunction.Arn"
+      FunctionName: !GetAtt "CutDeckFunction.Arn"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/game"
-
-
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RestApi}/*/*/cut"
+  CutDeckApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt RestApi.RootResourceId
+      PathPart: cut
+      RestApiId: !Ref RestApi
+  CutDeckApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: POST
+      AuthorizationType: COGNITO_USER_POOLS
+      # AuthorizationType: CUSTOM
+      AuthorizerId: !Ref PlanAuthorizer
+      ResourceId: !Ref CutDeckApiResource
+      RestApiId: !Ref RestApi
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 
+          - "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations"
+          - lambdaArn: !GetAtt "CutDeckFunction.Arn"
+  # CutDeckOptionsApiMethod:
+  #   Type: AWS::ApiGateway::Method
+  #   Properties:
+  #     AuthorizationType: NONE
+  #     RestApiId: !Ref RestApi
+  #     ResourceId: !Ref CutDeckApiResource
+  #     HttpMethod: OPTIONS
+  #     MethodResponses:
+  #     - StatusCode: 200
+  #       ResponseModels:
+  #         application/json: 'Empty'
+  #       ResponseParameters:
+  #         method.response.header.Access-Control-Allow-Headers: false
+  #         method.response.header.Access-Control-Allow-Methods: false
+  #         method.response.header.Access-Control-Allow-Origin: false
+  #     Integration:
+  #       Type: MOCK
+  #       IntegrationResponses:
+  #       - StatusCode: 200
+  #         ResponseParameters:
+  #           method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  #           method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+  #           method.response.header.Access-Control-Allow-Origin: !Join [ "", [ "'https://", !Ref DomainName, "'" ] ]
+  #         ResponseTemplates:
+  #           application/json: ''
+  #       PassthroughBehavior: WHEN_NO_MATCH
+  #       RequestTemplates:
+  #         application/json: '{"statusCode": 200}'
 
   # DYNAMODB
   DynamoDecksTable:
@@ -738,7 +716,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 50
         WriteCapacityUnits: 50
-
   DynamoGamesTable:
     Type: AWS::Serverless::SimpleTable
     Properties:

@@ -11,7 +11,7 @@ In this Lab, you'll crack open the IDE to secure a SaaS platform built on a Reac
 * Install/Update VS Code (or IDE of choice)
 * Install/Update Brew [https://brew.sh/]
 * Install/Update the AWS CLI with the IAM credentials above and the default region e.g. *ap-southeast-2*. [https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html]
-[Link](https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html "title" target="_blank")
+[Link](https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html){:target="_blank"}
 
 * Configure the AWS CLI with the IAM user's access keys, your default region e.g. *ap-southeast-2* and *json* as default output. [https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html]
 * Install/Update the AWS SAM CLI [https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html]

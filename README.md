@@ -40,17 +40,18 @@ git clone https://github.com/ge8/docaas-summit
 *  Chrome, username: gold1, password: Temporary1!
 *  Firefox, username: silver1, password: Temporary1!
 *  Safari/Edge, username: bronze1, password: Temporary1!
+![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png "Logo Title Text 1")
 
-2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111"
+2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png "Logo Title Text 1")
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png "Logo Title Text 1")
 
 2. With some users, play a few **_game_**s. Note that this 2-card game with perfectly ordered decks, makes no sense.
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png "Logo Title Text 1")
 
-3. With some users, **_shuffle_** a few decks and then **_get_** them and play **_game_**s.
+3. With some users, **_shuffle_** a few decks and then **_get_** them and play **_game_**s with the shuffled deck.
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/shuffle111.png "Logo Title Text 1")
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png "Logo Title Text 1")
+* Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
 
 4. Check out the ReactJS source code found in the **_frontend_** directory.
 

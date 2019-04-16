@@ -22,16 +22,15 @@ git clone https://github.com/ge8/docaas-summit
 ```
 * Open the folder ~/Desktop/docaas-summit in VS Code (or your IDE of choice)
 * Open load-variables.sh and set SAMBUCKET (S3 bucket name for deployment created aboive), REGION (the same defaul region confifured on the AWS CLI e.g. ap-southeast-2).
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png "Logo Title Text 1")
 * Open template.yaml found in the backend directory, and set the parameters: DomainName (e.g. summit.docaas.net) and AcmCertificateArn as the ARN of the ACM Certificate ARN created above.
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-* Deploy backend & app: 
+![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png "Logo Title Text 1")
+* From the ~/Desktop/docaas-summit directory, deploy the backend & app. This might take from 10 to 40 mins because Cloudfront takes that much (Go grab a cup of tea/coffee or play a Fortnite game while it deploys)
 ```shell
-cd docaas-summit 
-./deploy-template.sh # Might take from 10 to 40 mins (Cloudfront takes that much)
+./deploy-template.sh 
 ./deploy-app.sh
 ```
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/3.png "Logo Title Text 1")
 
 # LABS 
 ### Lab 0: Check the app out

@@ -28,6 +28,7 @@ git clone https://github.com/ge8/docaas-summit
 1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png" width="70%">
+
 * From the ~/Desktop/docaas-summit directory, deploy the backend & app. This might take from 10 to 40 mins because Cloudfront takes that much (Go grab a cup of tea/coffee or play a Fortnite game while it deploys)
 ```shell
 ./deploy-template.sh 
@@ -52,6 +53,7 @@ git clone https://github.com/ge8/docaas-summit
 
 4. With some users, **_shuffle_** a few decks and then **_get_** them and play **_game_**s with the shuffled deck.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/shuffle111.png" width="50%">
+
 * Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
 
 5. Check out the ReactJS source code found in the **_frontend_** directory.
@@ -59,6 +61,7 @@ git clone https://github.com/ge8/docaas-summit
 6. Check out the backend source code found in the **_backend_** directory. 
 * Note there are 9 AWS Lambda functions written in NodeJS - these are the 7 microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet)
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/microservices.png" width="80%">
+
 * Check out SAM template called **_template.yaml_** found in the **_backend_** directory and see all the resources that are part of the CloudFormation stack.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/architecture.png" width="80%">
 

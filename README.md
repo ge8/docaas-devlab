@@ -23,9 +23,9 @@ git clone https://github.com/ge8/docaas-summit
 * Open the folder **_~/Desktop/docaas-summit_** in VS Code (or your IDE of choice)
 * Open **_load-variables.sh_** and set **_SAMBUCKET_** (S3 bucket name for deployment created above), **_REGION_** (the same default region configured on the AWS CLI e.g. **_ap-southeast-2_**).
 ![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png =250x250)
-<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%" height="auto">
-<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%"">
-<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50" >
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%" height="auto">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%"">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50" >
 * Open **_template.yaml_** found in the **_backend_** directory, and set the parameters:  
 1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.

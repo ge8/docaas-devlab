@@ -22,17 +22,20 @@ git clone https://github.com/ge8/docaas-summit
 ```
 * Open the folder **_~/Desktop/docaas-summit_** in VS Code (or your IDE of choice)
 * Open **_load-variables.sh_** and set **_SAMBUCKET_** (S3 bucket name for deployment created above), **_REGION_** (the same default region configured on the AWS CLI e.g. **_ap-southeast-2_**).
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png "Logo Title Text 1")
+![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png =250x250)
+<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%" height="auto">
+<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%"">
+<img src="hhttps://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50" >
 * Open **_template.yaml_** found in the **_backend_** directory, and set the parameters:  
 1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png "Logo Title Text 1")
+![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png =250x250)
 * From the ~/Desktop/docaas-summit directory, deploy the backend & app. This might take from 10 to 40 mins because Cloudfront takes that much (Go grab a cup of tea/coffee or play a Fortnite game while it deploys)
 ```shell
 ./deploy-template.sh 
 ./deploy-app.sh
 ```
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/3.png "Logo Title Text 1")
+![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/3.png =250x250)
 
 # LABS 
 ### Lab 0: Check the app out
@@ -40,7 +43,7 @@ git clone https://github.com/ge8/docaas-summit
 *  Chrome, username: gold1, password: Temporary1!
 *  Firefox, username: silver1, password: Temporary1!
 *  Safari/Edge, username: bronze1, password: Temporary1!
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png "Logo Title Text 1")
+![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png =250x250)
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png "Logo Title Text 1")

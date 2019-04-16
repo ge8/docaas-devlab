@@ -10,8 +10,8 @@ In this Lab, you'll crack open the IDE to secure a SaaS platform built on a Reac
 ### Machine prerequisites (for linux/mac users):
 * Install/Update VS Code (or IDE of choice)
 * Install/Update Brew <a href="https://brew.sh/" target="_blank">Link</a>
-* Install/Update the AWS CLI with the IAM credentials above and the default region e.g. **_ap-southeast-2_**. <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html" target="_blank">Link</a>
-* Configure the AWS CLI with the IAM user's access keys, your default region e.g. **_ap-southeast-2_** and **_json_** as default output. <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html" target="_blank">Link</a>
+* Install/Update the AWS CLI with the IAM credentials above and the default region e.g. **_ap-southeast-2_**. <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html" target="_blank" style="width:50%;height:auto;">Link</a>
+* Configure the AWS CLI with the IAM user's access keys, your default region e.g. **_ap-southeast-2_** and **_json_** as default output. <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html" target="_blank" style="width:10%;height:auto;">Link</a>
 * Install/Update the AWS SAM CLI <a href="https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html" target="_blank">Link</a>
 * Three web browsers installed e.g. Google Chrome, Mozilla Firefox, and Safari or Edge
 ### Lab Setup (for linux/mac users)

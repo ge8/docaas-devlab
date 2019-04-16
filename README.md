@@ -61,8 +61,6 @@ git clone https://github.com/ge8/docaas-summit
 ![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/architecture.png "Logo Title Text 1")
 
 
-
-
 ### Lab 1: Access Control
 
 

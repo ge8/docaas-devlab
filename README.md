@@ -22,20 +22,18 @@ git clone https://github.com/ge8/docaas-summit
 ```
 * Open the folder **_~/Desktop/docaas-summit_** in VS Code (or your IDE of choice)
 * Open **_load-variables.sh_** and set **_SAMBUCKET_** (S3 bucket name for deployment created above), **_REGION_** (the same default region configured on the AWS CLI e.g. **_ap-southeast-2_**).
-![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png =250x250)
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%" height="auto">
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%"">
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50" >
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%">
+
 * Open **_template.yaml_** found in the **_backend_** directory, and set the parameters:  
 1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.
-![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png =250x250)
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png" width="50%">
 * From the ~/Desktop/docaas-summit directory, deploy the backend & app. This might take from 10 to 40 mins because Cloudfront takes that much (Go grab a cup of tea/coffee or play a Fortnite game while it deploys)
 ```shell
 ./deploy-template.sh 
 ./deploy-app.sh
 ```
-![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/3.png =250x250)
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/3.png" width="50%">
 
 # LABS 
 ### Lab 0: Check the app out
@@ -43,26 +41,26 @@ git clone https://github.com/ge8/docaas-summit
 *  Chrome, username: gold1, password: Temporary1!
 *  Firefox, username: silver1, password: Temporary1!
 *  Safari/Edge, username: bronze1, password: Temporary1!
-![](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png =250x250)
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png "Logo Title Text 1")
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png "Logo Title Text 1")
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="50%">
 
 2. With some users, play a few **_game_**s. Note that this 2-card game with perfectly ordered decks, makes no sense.
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png "Logo Title Text 1")
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png" width="50%">
 
 3. With some users, **_shuffle_** a few decks and then **_get_** them and play **_game_**s with the shuffled deck.
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/shuffle111.png "Logo Title Text 1")
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/shuffle111.png" width="50%">
 * Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
 
 4. Check out the ReactJS source code found in the **_frontend_** directory.
 
 5. Check out the backend source code found in the **_backend_** directory. 
 * Note there are 9 AWS Lambda functions written in NodeJS - these are the 7 microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet)
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/microservices.png "Logo Title Text 1")
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/microservices.png" width="100%">
 * Check out SAM template called **_template.yaml_** found in the **_backend_** directory and see all the resources that are part of the CloudFormation stack.
-![alt text](https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/architecture.png "Logo Title Text 1")
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/architecture.png" width="100%">
 
 
 ### Lab 1: Access Control

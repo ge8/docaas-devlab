@@ -3,30 +3,37 @@ In this Lab, you'll crack open the IDE to secure a SaaS platform built on a Reac
 
 # INITIAL SET UP
 ### AWS Account requirements
-* IAM user with admin policy
-* A Route53 hosted zone with authoratative domain or subdomain name (labx.docaas.net)
-* An AWS ACM certificate in the us-east-1 region for the domain/sudomain name above and *. alias.
-* A Private S3 bucket for deployment purposes (SAMBUCKET)
-### Machine prerequisites:
-* Install VS Code (or IDE of choice)
-* Install and configure the AWS CLI with the IAM credentials above and the default region (e.g. ap-southeast-2)
+* IAM user with admin policy and access keys.
+* A Route53 hosted zone with a domain e.g. docaas.net. Route 53 name servers should be the authoritative name servers for the domain.
+* An AWS ACM certificate in the us-east-1 region for the domain/sudomain name above and *. alias. (The ARN for this ACM Certificate will be later configured as the AcmCertificateArn parameter)
+* A Private S3 bucket for deployment purposes (will be later configured as the SAMBUCKET parameter)
+### Machine prerequisites (for linux/mac users):
+* Install/Update VS Code (or IDE of choice)
+* Install/Update Brew [https://brew.sh/]
+* Install/Update the AWS CLI with the IAM credentials above and the default region e.g. ap-southeast-2. [https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html]
+* Configure the AWS CLI with the IAM user's access keys, your default region e.g. ap-southeast-2 and json as default output. [https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html]
+* Install/Update the AWS SAM CLI [https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-linux.html]
 * Two web browsers installed (e.g. Google Chrome and Mozilla Firefox)
-### Lab Setup (for Mac users)
+### Lab Setup (for linux/mac users)
 * Navigate to desktop folder and clone repo: 
 ```shell
 cd ~/Desktop
 git clone https://github.com/ge8/docaas-summit
 ```
-* Set SAMBUCKET (S3 bucket name for deployment), REGION (e.g. ap-southeast-2) and STACK (a name for a cloudformation stack) in the load-variables.sh script.
-* Set DomainName (e.g. summit.docaas.net) and AcmCertificateArn as the ACM Certificate ARN created at for the AWS Account requirements above.
+* Open the folder ~/Desktop/docaas-summit in VS Code (or your IDE of choice)
+* Open load-variables.sh and set SAMBUCKET (S3 bucket name for deployment created aboive), REGION (the same defaul region confifured on the AWS CLI e.g. ap-southeast-2).
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+* Open template.yaml found in the backend directory, and set the parameters: DomainName (e.g. summit.docaas.net) and AcmCertificateArn as the ARN of the ACM Certificate ARN created above.
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 * Deploy backend & app: 
 ```shell
 cd docaas-summit 
 ./deploy-template.sh # Might take from 10 to 40 mins (Cloudfront takes that much)
 ./deploy-app.sh
 ```
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
-# LABS
+# LABS 
 ### Lab 0: Check the app out
 * Play with the app (labx.docaas.net) by:
 ** Using an incognito Chrome browser, and login with username: bronze1 password: Permanent1!

@@ -60,3 +60,4 @@ aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username
 aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username silver1
 aws cognito-idp admin-user-global-sign-out --user-pool-id $USERPOOLID --username gold1
 
+echo 'App Deployment Complete!'

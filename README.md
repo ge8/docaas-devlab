@@ -38,7 +38,7 @@ git clone https://github.com/ge8/docaas-summit
 
 # LABS 
 ### Lab 0: Check the app out
-is Deck Of Cards as a Service is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
+Deck Of Cards as a Service is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/plans.png" width="30%">
 
@@ -49,8 +49,7 @@ is Deck Of Cards as a Service is an online service that allows users to create v
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="50%">
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="45%">
 
 3. With some users, play a few **_game_**s. Note that this 2-card game with perfectly ordered decks, makes no sense.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png" width="50%">

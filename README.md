@@ -38,8 +38,11 @@ git clone https://github.com/ge8/docaas-summit
 
 # LABS 
 ### Lab 0: Check the app out
+is Deck Of Cards as a Service is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/plans.png" width="30%">
+
 1. Login into the app with three different users (gold1, silver1 and bronze1) by going to your DomainName using incognito browser sessions on three different browsers (this prevent caching issues with ReactJS). You will be prompted to change the password for a permanent one e.g. Permanent1!. For example:
-*  Chrome, username: gold1, password: Temporary1!
+*  Chrome, username: gold1, password: Temporary1! (Use Chrome for the gold1 user - you'll need this below)
 *  Firefox, username: silver1, password: Temporary1!
 *  Safari/Edge, username: bronze1, password: Temporary1!
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
@@ -56,9 +59,24 @@ git clone https://github.com/ge8/docaas-summit
 
 * Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
 
-5. Check out the ReactJS source code found in the **_frontend_** directory.
+5. Using the app in the Chrome browser loges in as the gold user, open **_Developer Tools_** by either going to the Chrome menu > More Tools > Developer Tools (or simply using the keyboard shortcut: command+options+I). Go to the console tab and then try to **_cut_** a deck. You'll notice this fails and gives you a CORS error in the console. This is what happens when CORS isn't configured in your API: the browser will prevent you from accessing the API.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/cut-error.png" width="50%">
 
-6. Check out the backend source code found in the **_backend_** directory. 
+6. At the top of the console logs, you'll see a long string of seemilgly random characters. This is the user's identity token - it's one of the three JWT tokens <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">Link</a> as part of the OAuth standard <a href="https://en.wikipedia.org/wiki/OAuth" target="_blank">Link</a>  which is used by Open ID Connect <a href="https://en.wikipedia.org/wiki/OpenID_Connect" target="_blank">Link</a>identity providers like Amazon Cognito for our app. 
+
+Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="50%">
+Note that the token's signature is valid. 
+
+The payload of the identity token contains the meat of the token. You can add as many claims in payload as you want, such as **_iss_** (the identity provider that validated the token), **_cognito:username_**, **_email_**, etc. For SaaS apps, things like subscription status, or plan can be useful. The way you add more fields with Amazon Cognito is by creating custom attributes like we did with (**_custom:plan_**)
+
+This flexibility makes Open ID Connect and SaaS apps are a great match because it’s a lightweight and secure way all you microservices can get user context without having to pull information from different places.
+
+On Lab 1, we will use the **_custom:plan_** found in the JWT token to control access to API resources.
+
+7. Check out the ReactJS source code found in the **_frontend_** directory.
+
+8. Check out the backend source code found in the **_backend_** directory. 
 * Note there are 9 AWS Lambda functions written in NodeJS - these are the 7 microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet)
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/microservices.png" width="80%">
 
@@ -78,14 +96,34 @@ At the moment our application is proxing these options requests to a CORS-specif
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="50%">
 
 2. Check out the CORS Lambda function code **_cors.js_** found in the **_backend/src_** directory. Note that by having a wildcard '*', this API can be accessed by any origin from the interwebs.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-lambda.png" width="50%">
 
 Let's replace the CORS Lambda function with Amazon API Gateway native support for CORS.
 
-3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. 
+3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. First, hide or remove the CORS Lambda function definition. 
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template-hidden.png" width="50%">
+Then, reconfigure each of the 4 **_options_** methods (Create, Get, Game, Shuffle) found in the API Gateway Resources to use the MOCK type instead of the AWS_PROXY type. You can do this by simply hidding and unhidding the relevant sections of the template. Note that the new mocked CORS responses are only allowing the origin to be our subdomain.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cors.png" width="50%">
+Then, enable the entire **_options_** method definition for the **_Cut_** resource found last in the API Gateway Resources. 
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cut.png" width="50%">
+
+4. Now you can remove the **_cors.js_** file from **_backend/src_**
+
+Congratulations! CORS is now properly implemented.
+
+#### Access Control to API resources
+API Gateway supports multiple mechanisms for controlling access to your API <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html" target="_blank">Link</a>. At the moment we have our Cognito User Pool configured as the Authorizer. Although this is easy and completely managed by Cognito and API Gateway, it only allows a binary check: if the JWT tokens are valid (user is loged in), then it allows access to **_ALL_** API resources. A better approach would be to allow granular access to API resources based on the user plans. For example: silver users shouldn’t be able to access the Cut service. While Bronze users should only be able to access Create, Get and Game.
+
+So, we're going to swap the authorizer from Cognito User Pool to a Lambda Authorizer. A Lambda Authorizer – is an authorization option for API Gateway that allows us to inspect bearer token authentication methods (such as SAML or Oauth) and make access control decisions based on that.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/lambda-authorizer.png" width="70%">
 
 
-1. 
+
+
+
+
+
+
 
 
 
@@ -93,6 +131,12 @@ Let's replace the CORS Lambda function with Amazon API Gateway native support fo
 
 ### Lab 2: Data Partitioning
 
+
+### How to reset the demo
+You can reset the demo by running the following:
+```
+cd ~/Desktop
+git 
 
 -------------------------
 

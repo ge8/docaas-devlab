@@ -49,7 +49,7 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="45%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="43%">
 
 3. With some users, play a few **_game_**s. Note that this 2-card game with perfectly ordered decks, makes no sense.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png" width="50%">

@@ -49,12 +49,12 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="43%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="44%">
 
-3. With some users, play a few **_game_**s. Note that this 2-card game with perfectly ordered decks, makes no sense.
+3. With some users, play a few **_games_**. Note that this 2-card game with perfectly ordered decks, makes no sense.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/game111.png" width="50%">
 
-4. With some users, **_shuffle_** a few decks and then **_get_** them and play **_game_**s with the shuffled deck.
+4. With some users, **_shuffle_** a few decks and then **_get_** them and play **_games_** with the shuffled deck.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/shuffle111.png" width="50%">
 
 * Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
@@ -64,7 +64,7 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 
 6. At the top of the console logs, you'll see a long string of seemilgly random characters. This is the user's identity token - it's one of the three JWT tokens <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">Link</a> as part of the OAuth standard <a href="https://en.wikipedia.org/wiki/OAuth" target="_blank">Link</a>  which is used by Open ID Connect <a href="https://en.wikipedia.org/wiki/OpenID_Connect" target="_blank">Link</a>identity providers like Amazon Cognito for our app. 
 
-Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
+..Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="50%">
 Note that the token's signature is valid. 
 

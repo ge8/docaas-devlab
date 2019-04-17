@@ -104,7 +104,7 @@ Let's replace the CORS Lambda function with Amazon API Gateway native support fo
 3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. First, hide or remove the CORS Lambda function definition. 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template-hidden.png" width="70%">
 
-Then, reconfigure each of the 4 **_options_** methods (Create, Get, Game, Shuffle) found in the API Gateway Resources to use the MOCK type instead of the AWS_PROXY type. You can do this by simply hidding and unhidding the relevant sections of the template. Note that the new mocked CORS responses are only allowing the origin to be our subdomain.
+Then, reconfigure each of the 4 **_options_** methods (Create, Get, Game, Shuffle) found in the API Gateway Resources to use the MOCK type instead of the AWS_PROXY type. You can do this by simply hiding and unhiding the relevant sections of the template. Note that the new mocked CORS responses are only allowing the origin to be our subdomain.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cors.png" width="70%">
 
 Then, enable the entire **_options_** method definition for the **_Cut_** resource found last in the API Gateway Resources. 
@@ -112,23 +112,39 @@ Then, enable the entire **_options_** method definition for the **_Cut_** resour
 
 4. Now you can remove the **_cors.js_** file from **_backend/src_**
 
-Congratulations! CORS is now properly implemented.
+CORS configuration is now properly congifured but before deploying changes, we'll improve the access control to API resources.
 
 #### Access Control to API resources
 API Gateway supports multiple mechanisms for controlling access to your API <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html" target="_blank">Link</a>. At the moment we have our Cognito User Pool configured as the Authorizer. Although this is easy and completely managed by Cognito and API Gateway, it only allows a binary check: if the JWT tokens are valid (user is loged in), then it allows access to **_ALL_** API resources. A better approach would be to allow granular access to API resources based on the user plans. For example: silver users shouldn’t be able to access the Cut service. While Bronze users should only be able to access Create, Get and Game.
 
-So, we're going to swap the authorizer from Cognito User Pool to a Lambda Authorizer. A Lambda Authorizer – is an authorization option for API Gateway that allows us to inspect bearer token authentication methods (such as SAML or Oauth) and make access control decisions based on that.
+So, we're going to swap the authorizer from Cognito User Pool to a Lambda Authorizer. A Lambda Authorizer is an authorization option for API Gateway that allows us to inspect bearer token authentication methods (such as SAML or OAuth) and make access control decisions based on that.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/lambda-authorizer.png" width="70%">
 
+This is how it works: API Gateway calls the Lambda function and supplies the JWT Tokens. The Lambda Authorizer runs your code (in this case we'll validate the JWT token and make access control decisions based on the custom:plan coming in the token's payload). Tha Lambda Authorizer returns the IAM policies that authorize that specific tokenalong with some context. If the returned policy is invalid or the permissions are denied, the API call does not succeed. For a valid policy, API Gateway caches the returned policy, associated with the incoming token  over a configurable TTL. For allowed calls, API gateway embeds the context to downstream services. 
+
+Additionally, we'll use the context created by the Lambda Authorizer to embed all user information that our downstream microservices need in order operate without having to validate tokens or pull info from services like Amazon Cognito. This way we're abstracting the security complexity and maintaing a good developer experience from microservices developers.
+
+1. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) could access the **_Cut_** API resouce - which shouldn't be the case.
 
 
+1. Open the SAM template **_template.yaml_** found in the **_backend_** directory and let's replace the AWS::ApiGateway::Authorizer type from Cognito User Pools to **_Token_** (this is a Lambda Authorizer). You can do this by simply hiding and unhiding the relevant sections of the template.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-authorizer.png" width="70%">
 
+2. Define the Lambda Authoriser Lambda function using SAM syntax and its permissions. You can do this by simply hiding and unhiding the relevant sections of the template.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-lambda-authorizer.png" width="70%">
 
+3. Finally we need to update the **_AuthorizationType_** for all 5 of our POST or GET methods so that they stop using Cognito (**_COGNITO_USER_POOLS_**) and start using our Lambda Authorizer (**_CUSTOM_**)
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/authorization-type.png" width="70%">
 
+Now we're ready to deploy all changes! This should take about 1 minute.
+```shell
+cd ~/Desktop
+./update-template.yaml
+```
 
+4. Check out the app and confirm everything is working.
 
-
-
+5. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) are now blocked from accessing the **_Cut_** API resouce thanks to the fine grained access control we implemented.
 
 
 

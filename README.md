@@ -66,6 +66,7 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 
 ..Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="50%">
+
 Note that the token's signature is valid. 
 
 The payload of the identity token contains the meat of the token. You can add as many claims in payload as you want, such as **_iss_** (the identity provider that validated the token), **_cognito:username_**, **_email_**, etc. For SaaS apps, things like subscription status, or plan can be useful. The way you add more fields with Amazon Cognito is by creating custom attributes like we did with (**_custom:plan_**)
@@ -102,8 +103,10 @@ Let's replace the CORS Lambda function with Amazon API Gateway native support fo
 
 3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. First, hide or remove the CORS Lambda function definition. 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template-hidden.png" width="50%">
+
 Then, reconfigure each of the 4 **_options_** methods (Create, Get, Game, Shuffle) found in the API Gateway Resources to use the MOCK type instead of the AWS_PROXY type. You can do this by simply hidding and unhidding the relevant sections of the template. Note that the new mocked CORS responses are only allowing the origin to be our subdomain.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cors.png" width="50%">
+
 Then, enable the entire **_options_** method definition for the **_Cut_** resource found last in the API Gateway Resources. 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cut.png" width="50%">
 

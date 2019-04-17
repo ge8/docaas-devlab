@@ -69,10 +69,23 @@ git clone https://github.com/ge8/docaas-summit
 ### Lab 1: Access Control
 In this Lab, you'll improve the Access Control configuration of the application in two areas: CORS (Cross-Origin Resource Sharing) and Access Control to API resources.
 
-##### CORS
+#### CORS
 Cross-Origin Resource Sharing <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank">Link</a> is a security standard measure that needs to be implemented in some APIs in order to let web browsers access them. The implication of having of this misconfigured can be anywhere having data stolen to having our entire application compromised. With CORS, browsers send an ***_options_** request to the API - and the API responds with permissions.
 
-At the moment our application is proxing these options requests to a CORS-specific Lambda function and the Lambda response is hardcoded with a wildcard for origin that allows any computer in the world to access the APIs.
+At the moment our application is proxing these options requests to a CORS-specific Lambda function and the Lambda response is hardcoded with a wildcard for origin that allows any computer in the world to access the APIs. We'll improve this in two ways: 1) Replacing the CORS Lambda function with Amazon API Gateway native support for CORS <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html" target="_blank">Link</a>. This way we won't have to have a Lambda function for this. 2) Restricting origin permissions to our Subdomain name. Let's do it!
+
+1. Check out the CORS Lambda function definition in the SAM template **_template.yaml_** found in the **_backend_** directory. The syntax used here is part of the Serverless Appication Model (SAM) <a href="https://aws.amazon.com/serverless/sam/" target="_blank">Link</a> which makes it easier to create, manage and update Serverless resources like AWS Lambda functions, Amazon API Gateway APIs and Amazon DynamoDB tables.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="50%">
+
+2. Check out the CORS Lambda function code **_cors.js_** found in the **_backend/src_** directory. Note that by having a wildcard '*', this API can be accessed by any origin from the interwebs.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="50%">
+
+Let's replace the CORS Lambda function with Amazon API Gateway native support for CORS.
+
+3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. 
+
+
+1. 
 
 
 

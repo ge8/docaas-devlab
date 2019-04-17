@@ -127,13 +127,15 @@ Additionally, we'll use the context created by the Lambda Authorizer to embed al
 1. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) can access the **_Cut_** API resouce - which shouldn't be the case. Make sure you use the user's JWT token in the Authorization header
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/insomnia-1.png" width="70%">
 
-2. Open the SAM template **_template.yaml_** found in the **_backend_** directory and let's replace the AWS::ApiGateway::Authorizer type from Cognito User Pools to **_Token_** (this is a Lambda Authorizer). You can do this by simply hiding and unhiding the relevant sections of the template.
+2. Inspect the Lambda Authorizer code **_authoriser.js_** found in **_backend/src_**. This function is quite long. Note what we're doing in the three main parts of the handler **exports.authorise_request**: 1) Validating the JWT token. 2) Constructing the **_IAM Policy_** for the JWT token. 3) Constructing the **_context_** of the token.
+
+3. Open the SAM template **_template.yaml_** found in the **_backend_** directory and let's replace the AWS::ApiGateway::Authorizer type from Cognito User Pools to **_Token_** (this is a Lambda Authorizer). You can do this by simply hiding and unhiding the relevant sections of the template.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-authorizer.png" width="70%">
 
-3. Define the Lambda Authoriser Lambda function using SAM syntax and its permissions. You can do this by simply hiding and unhiding the relevant sections of the template.
+4. Define the Lambda Authoriser Lambda function using SAM syntax and its permissions. You can do this by simply hiding and unhiding the relevant sections of the template.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-lambda-authorizer.png" width="70%">
 
-4. Finally we need to update the **_AuthorizationType_** for all 5 of our POST or GET methods so that they stop using Cognito (**_COGNITO_USER_POOLS_**) and start using our Lambda Authorizer (**_CUSTOM_**)
+5. Finally we need to update the **_AuthorizationType_** for all 5 of our POST or GET methods so that they stop using Cognito (**_COGNITO_USER_POOLS_**) and start using our Lambda Authorizer (**_CUSTOM_**)
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/authorization-type.png" width="70%">
 
 Now we're ready to deploy all changes! This should take about 1 minute.

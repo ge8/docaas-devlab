@@ -39,6 +39,7 @@ git clone https://github.com/ge8/docaas-summit
 # LABS 
 ### Lab 0: Check the app out
 is Deck Of Cards as a Service is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
+
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/plans.png" width="30%">
 
 1. Login into the app with three different users (gold1, silver1 and bronze1) by going to your DomainName using incognito browser sessions on three different browsers (this prevent caching issues with ReactJS). You will be prompted to change the password for a permanent one e.g. Permanent1!. For example:

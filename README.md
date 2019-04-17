@@ -8,7 +8,8 @@ In this Lab, you'll crack open the IDE to secure a SaaS platform built on a Reac
 * An AWS ACM certificate in the **_us-east-1_** region for the domain/sudomain name above and *. alias. (The ARN for this ACM Certificate will be later configured as the **_AcmCertificateArn_** parameter)
 * A Private S3 bucket for deployment purposes (will be later configured as the **_SAMBUCKET_** parameter)
 ### Machine prerequisites (for linux/mac users):
-* Install/Update VS Code (or IDE of choice)
+* VS Code (or IDE of choice) installed
+* (Optional) A REST client like Insomnia [https://insomnia.rest/] to test APIs
 * Install/Update Brew <a href="https://brew.sh/" target="_blank">Link</a>
 * Install/Update the AWS CLI with the IAM credentials above and the default region e.g. **_ap-southeast-2_**. <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-linux-al2017.html" target="_blank" style="width:50%;height:auto;">Link</a>
 * Configure the AWS CLI with the IAM user's access keys, your default region e.g. **_ap-southeast-2_** and **_json_** as default output. <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html" target="_blank" style="width:10%;height:auto;">Link</a>

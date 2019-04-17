@@ -48,7 +48,11 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 *  Safari/Edge, username: bronze1, password: Temporary1!
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/entry.png" width="50%">
 
-2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". Note: the first time you execute an AWS Lambda function, it
+2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". 
+
+Note: the first time you execute an AWS Lambda function, you may experience a couple of seconds of delay - this is called a "cold start". This only occurs the first time you use a Lambda function after creation, update or after a long period without use. For this app, a single "create" may cold-start up to 3 lambda functions, so you might need to way up to 10 seconds the first time to execute these functions. This lab doesn't intend to resolve cold starts. This is a great advanced re:Invent session that explains cold-starts and how to optimise your set up [https://www.youtube.com/watch?v=oQFORsso2go]
+
+Some of the application functions, hit multiple lambdas in sequence, if they're all cold, you might expeci
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/get111.png" width="44%">
 
 3. With some users, play a few **_games_**. Note that this 2-card game with perfectly ordered decks, makes no sense.

@@ -124,16 +124,16 @@ This is how it works: API Gateway calls the Lambda function and supplies the JWT
 
 Additionally, we'll use the context created by the Lambda Authorizer to embed all user information that our downstream microservices need in order operate without having to validate tokens or pull info from services like Amazon Cognito. This way we're abstracting the security complexity and maintaing a good developer experience from microservices developers.
 
-1. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) could access the **_Cut_** API resouce - which shouldn't be the case.
+1. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) can access the **_Cut_** API resouce - which shouldn't be the case. Make sure you use the user's JWT token in the Authorization header
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/insomnia-1.png" width="70%">
 
-
-1. Open the SAM template **_template.yaml_** found in the **_backend_** directory and let's replace the AWS::ApiGateway::Authorizer type from Cognito User Pools to **_Token_** (this is a Lambda Authorizer). You can do this by simply hiding and unhiding the relevant sections of the template.
+2. Open the SAM template **_template.yaml_** found in the **_backend_** directory and let's replace the AWS::ApiGateway::Authorizer type from Cognito User Pools to **_Token_** (this is a Lambda Authorizer). You can do this by simply hiding and unhiding the relevant sections of the template.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-authorizer.png" width="70%">
 
-2. Define the Lambda Authoriser Lambda function using SAM syntax and its permissions. You can do this by simply hiding and unhiding the relevant sections of the template.
+3. Define the Lambda Authoriser Lambda function using SAM syntax and its permissions. You can do this by simply hiding and unhiding the relevant sections of the template.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/template-lambda-authorizer.png" width="70%">
 
-3. Finally we need to update the **_AuthorizationType_** for all 5 of our POST or GET methods so that they stop using Cognito (**_COGNITO_USER_POOLS_**) and start using our Lambda Authorizer (**_CUSTOM_**)
+4. Finally we need to update the **_AuthorizationType_** for all 5 of our POST or GET methods so that they stop using Cognito (**_COGNITO_USER_POOLS_**) and start using our Lambda Authorizer (**_CUSTOM_**)
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/authorization-type.png" width="70%">
 
 Now we're ready to deploy all changes! This should take about 1 minute.
@@ -142,10 +142,10 @@ cd ~/Desktop
 ./update-template.yaml
 ```
 
-4. Check out the app and confirm everything is working.
+5. Check out the app and confirm everything is working.
 
-5. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) are now blocked from accessing the **_Cut_** API resouce thanks to the fine grained access control we implemented.
-
+6. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) are now blocked from accessing the **_Cut_** API resouce thanks to the fine grained access control we implemented.
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/insomnia-2.png" width="70%">
 
 
 ### Lab 2: Data Partitioning

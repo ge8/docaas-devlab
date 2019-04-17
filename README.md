@@ -27,7 +27,7 @@ git clone https://github.com/ge8/docaas-summit
 * Open **_template.yaml_** found in the **_backend_** directory, and set the parameters:  
 1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png" width="70%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png" width="80%">
 
 * From the ~/Desktop/docaas-summit directory, deploy the backend & app. This might take from 10 to 40 mins because Cloudfront takes that much (Go grab a cup of tea/coffee or play a Fortnite game while it deploys)
 ```shell
@@ -60,12 +60,12 @@ Deck Of Cards as a Service is an online service that allows users to create virt
 * Note the Cut service won't work because it's misconfigured and you'll fix it as part of Lab 1.
 
 5. Using the app in the Chrome browser loges in as the gold user, open **_Developer Tools_** by either going to the Chrome menu > More Tools > Developer Tools (or simply using the keyboard shortcut: command+options+I). Go to the console tab and then try to **_cut_** a deck. You'll notice this fails and gives you a CORS error in the console. This is what happens when CORS isn't configured in your API: the browser will prevent you from accessing the API.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/cut-error.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/cut-error.png" width="80%">
 
 6. At the top of the console logs, you'll see a long string of seemilgly random characters. This is the user's identity token - it's one of the three JWT tokens <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">Link</a> as part of the OAuth standard <a href="https://en.wikipedia.org/wiki/OAuth" target="_blank">Link</a>  which is used by Open ID Connect <a href="https://en.wikipedia.org/wiki/OpenID_Connect" target="_blank">Link</a>identity providers like Amazon Cognito for our app. 
 
-..Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="50%">
+Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="70%">
 
 Note that the token's signature is valid. 
 
@@ -94,21 +94,21 @@ Cross-Origin Resource Sharing <a href="https://en.wikipedia.org/wiki/Cross-origi
 At the moment our application is proxing these options requests to a CORS-specific Lambda function and the Lambda response is hardcoded with a wildcard for origin that allows any computer in the world to access the APIs. We'll improve this in two ways: 1) Replacing the CORS Lambda function with Amazon API Gateway native support for CORS <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html" target="_blank">Link</a>. This way we won't have to have a Lambda function for this. 2) Restricting origin permissions to our Subdomain name. Let's do it!
 
 1. Check out the CORS Lambda function definition in the SAM template **_template.yaml_** found in the **_backend_** directory. The syntax used here is part of the Serverless Appication Model (SAM) <a href="https://aws.amazon.com/serverless/sam/" target="_blank">Link</a> which makes it easier to create, manage and update Serverless resources like AWS Lambda functions, Amazon API Gateway APIs and Amazon DynamoDB tables.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template.png" width="70%">
 
 2. Check out the CORS Lambda function code **_cors.js_** found in the **_backend/src_** directory. Note that by having a wildcard '*', this API can be accessed by any origin from the interwebs.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-lambda.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-lambda.png" width="70%">
 
 Let's replace the CORS Lambda function with Amazon API Gateway native support for CORS.
 
 3. Open the SAM template **_template.yaml_** found in the **_backend_** directory. First, hide or remove the CORS Lambda function definition. 
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template-hidden.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/old-cors-template-hidden.png" width="70%">
 
 Then, reconfigure each of the 4 **_options_** methods (Create, Get, Game, Shuffle) found in the API Gateway Resources to use the MOCK type instead of the AWS_PROXY type. You can do this by simply hidding and unhidding the relevant sections of the template. Note that the new mocked CORS responses are only allowing the origin to be our subdomain.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cors.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cors.png" width="70%">
 
 Then, enable the entire **_options_** method definition for the **_Cut_** resource found last in the API Gateway Resources. 
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cut.png" width="50%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/options-method-cut.png" width="70%">
 
 4. Now you can remove the **_cors.js_** file from **_backend/src_**
 

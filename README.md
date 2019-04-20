@@ -26,7 +26,7 @@ git clone https://github.com/ge8/docaas-summit
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/1.png" width="50%">
 
 * Open **_template.yaml_** found in the **_backend_** directory, and set the parameters:  
-1. **_DomainName_** as an non-existing subdomain for your domain above e.g. lab.docaas.net. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you.
+1. **_DomainName_** as an non-existing subdomain for your domain above. You **_don't_** need to create a Route 53 record for this subdomain because the setup scripts below will create it for you. Fox example, if your domain is _docaas.net_, and _lab.docaas.net_ isn't created, you can configure **_DomainName_** as _lab.docaas.net_
 2. **_AcmCertificateArn_** as the ARN of the ACM Certificate ARN created above.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/2.png" width="80%">
 
@@ -67,23 +67,23 @@ Some of the application functions, hit multiple lambdas in sequence, if they're 
 5. Using the app browser logged in as the gold user, open **_Developer Tools_**. In Chrome, you do this by either going to the Chrome menu > More Tools > Developer Tools (or simply using the keyboard shortcut: command+options+I). Go to the console tab and then try to **_cut_** a deck. You'll notice this fails and gives you a CORS error in the console. This is what happens when CORS isn't configured in your API: the browser will prevent you from accessing the API.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/cut-error.png" width="80%">
 
-6. At the top of the console logs, you'll see a long string of seemilgly random characters. This is the user's identity token - it's one of the three JWT tokens <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">Link</a> as part of the OAuth standard <a href="https://en.wikipedia.org/wiki/OAuth" target="_blank">Link</a>  which is used by Open ID Connect <a href="https://en.wikipedia.org/wiki/OpenID_Connect" target="_blank">Link</a>identity providers like Amazon Cognito for our app. 
+6. At the top of the console logs, you'll see a long string of seemilgly random characters. This is the user's identity token - it's one of the three JWT tokens <a href="https://en.wikipedia.org/wiki/JSON_Web_Token" target="_blank">Link</a> as part of the OAuth standard <a href="https://en.wikipedia.org/wiki/OAuth" target="_blank">Link</a>  which is used by Open ID Connect <a href="https://en.wikipedia.org/wiki/OpenID_Connect" target="_blank">Link</a> identity providers like Amazon Cognito for our app. 
 
 Let's inspect this JWT token. Copy this token by copying it and pasting it at [https://jwt.io/].
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/jwtio.png" width="70%">
 
 Note that the token's signature is valid. 
 
-The payload of the identity token contains the meat of the token. You can add as many claims in payload as you want, such as **_iss_** (the identity provider that validated the token), **_cognito:username_**, **_email_**, etc. For SaaS apps, things like subscription status, or plan can be useful. The way you add more fields with Amazon Cognito is by creating custom attributes like we did with (**_custom:plan_**)
+The payload of the identity token contains the meat of the token. You can add as many claims in payload as you want, such as **_iss_** (the identity provider that validated the token), **_cognito:username_**, **_email_**, etc. For SaaS apps, things like subscription status, or plan can be useful. The way you add more fields with Amazon Cognito is by creating custom attributes like we did with **_custom:plan_**.
 
-This flexibility makes Open ID Connect and SaaS apps are a great match because it’s a lightweight and secure way all you microservices can get user context without having to pull information from different places.
+This flexibility makes Open ID Connect identity providers like Amazon Cognito and SaaS apps are a great match because you get a lightweight and secure way all you microservices can get user context without having to pull information from different places.
 
 On Lab 1, we will use the **_custom:plan_** found in the JWT token to control access to API resources.
 
 7. Check out the ReactJS source code found in the **_frontend_** directory.
 
 8. Check out the backend source code found in the **_backend_** directory. 
-* Note there are 9 AWS Lambda functions written in NodeJS - these are the 7 microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet)
+* Note there are 9 AWS Lambda functions written in NodeJS - 7 of those are part of the microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet - you'll use it in Lab 1)
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/microservices.png" width="80%">
 
 * Check out SAM template called **_template.yaml_** found in the **_backend_** directory and see all the resources that are part of the CloudFormation stack.
@@ -94,7 +94,7 @@ On Lab 1, we will use the **_custom:plan_** found in the JWT token to control ac
 In this Lab, you'll improve the Access Control configuration of the application in two areas: CORS (Cross-Origin Resource Sharing) and Access Control to API resources.
 
 #### CORS
-Cross-Origin Resource Sharing <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank">Link</a> is a security standard measure that needs to be implemented in some APIs in order to let web browsers access them. The implication of having of this misconfigured can be anywhere having data stolen to having our entire application compromised. With CORS, browsers send an ***_options_** request to the API - and the API responds with permissions.
+Cross-Origin Resource Sharing <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing" target="_blank">Link</a> is a security standard measure that needs to be implemented in some APIs in order to let web browsers access them. The implication of having of this misconfigured can be anywhere from having data stolen to having our entire application compromised. With CORS, browsers send an ***_options_** request to the API - and the API responds with permissions.
 
 At the moment our application is proxing these options requests to a CORS-specific Lambda function and the Lambda response is hardcoded with a wildcard for origin that allows any computer in the world to access the APIs. We'll improve this in two ways: 1) Replacing the CORS Lambda function with Amazon API Gateway native support for CORS <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-cors.html" target="_blank">Link</a>. This way we won't have to have a Lambda function for this. 2) Restricting origin permissions to our Subdomain name. Let's do it!
 
@@ -156,33 +156,46 @@ cd ~/Desktop
 
 
 ### Lab 2: Data Partitioning
-
-
-### How to reset the demo
-You can reset the demo by running the following:
-```
-cd ~/Desktop
-git 
-
--------------------------
-
-# TO DO:
-## Lab0 to Lab1: Browser Protection + Access Control based on SaaS plan attribute
-(Optional) Prove cross access?
-No CORS in SAM template & react app. Does it work? -> Lab1: Add CORS to cf and react app.
-
-Prove all customers access it all regardless of plan with Insomnia.
-Cognito Access Control in template -> Lab1: Add Lambda Authoriser to SAM template.
-Optional while deploy: SAM CLI test Lambda Authoriser.
-
-## Lab1 to Lab2: Data Partitioning + Abstracting Dev Complexity.
-(Optional) Prove coding error in Lambda can break any customer
-Full Dynamo access in Cognito Auth Role -> Lab2: Add conditional policy.
-(OPTIONAL) identity-ids prepended already? Or make it happen by modifying deck access helper?
-
-
-# Demo 2: Data Partitioning + Abstracting Dev Complexity.
 Notice that Deck access helper STILL just writes based on identity-id with Lambda Role.
 Modify Lambda Authorizer to return or use Context.
 New Policy for Cognito.
 Modify Deck-Data Helper to use this!
+
+
+
+
+### Lab Solutions
+If you get stuck or want to see or deploy the lab answers, we have those pre-configured in separate branches.
+
+To view the soltion to Lab 1:
+```
+git reset --hard HEAD
+git clean --force
+git checkout demo1
+```
+To view the soltion to Lab 2:
+```
+git checkout demo2
+```
+To deploy either of these solutions, simply run the update-template.sh command.
+```
+cd ~/Desktop
+./update-template.sh
+```
+
+### Want to experiment with the react app?
+To deploy the app, run the deploy-app.sh command.
+```
+cd ~/Desktop
+./deploy-app.sh
+```
+
+
+### How to reset the demo
+You can reset the demo at any time by running the following command:
+```
+cd ~/Desktop
+<!-- discard all git changes -->
+git checkout master
+./deploy-template.sh && ./update-template.sh
+```

@@ -167,14 +167,14 @@ Modify Deck-Data Helper to use this!
 ### Lab Solutions
 If you get stuck or want to see or deploy the lab answers, we have those pre-configured in separate branches.
 
-To view the soltion to Lab 1:
+To view the soltion to Lab 1 (and discard all your changes):
 ```
-git reset --hard HEAD
-git clean --force
+git reset --hard HEAD && git clean --force -d
 git checkout demo1
 ```
-To view the soltion to Lab 2:
+To view the soltion to Lab 2 (and discard all your changes):
 ```
+git reset --hard HEAD && git clean --force -d
 git checkout demo2
 ```
 To deploy either of these solutions, simply run the update-template.sh command.
@@ -195,7 +195,7 @@ cd ~/Desktop
 You can reset the demo at any time by running the following command:
 ```
 cd ~/Desktop
-<!-- discard all git changes -->
+git reset --hard HEAD && git clean --force -d
 git checkout master
 ./deploy-template.sh && ./update-template.sh
 ```

@@ -1,14 +1,27 @@
 # Prep Steps
-1. Create Resources in Lab Account: R53, S3, C9
+1. Clone the repo
 ```shell
 cd ~/Desktop
+git clone https://github.com/ge8/docaas-devlab
+```
+
+2. Create Resources in Lab Account: R53, S3 in region of choice
+```shell
+cd ~/Desktop/docaas-devlab
 ./prep/prep.sh
 ```
 
-2. Gerardo to delegate ${AWS::AccountId}.docaas.net to this account's name servers. Then wait 30 min for ACM to be validated.
+3. Gerardo to delegate ${AWS::AccountId}.docaas.net to this account's name servers. Then wait 30 min for ACM to be validated.
 
-3. Create ACM Resource in Lab Account and Validate it.
+4. Create ACM and C9 in us-east-1 Resource in Lab Account and Validate it.
 ```shell
-cd ~/Desktop
-./prep/acm.sh
+cd ~/Desktop/docaas-devlab
+./prep/acm+c9.sh
+```
+
+5. Deploy DoCaas app
+```shell
+cd ~/Desktop/docaas-devlab
+./deploy-template.sh 
+./deploy-app.sh
 ```

@@ -212,7 +212,7 @@ One thing that the SAM CLI doesn't do yet with these two commands (feature reque
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/table-end.png" width="70%">
 
 11. Go to the AWS Console > IAM > Roles and serch for _"CognitoAuthorized"_. You'll find the Cognito Authorized Role. This is the role given to all authorized users. You'll notice this role now has a two IAM policies attached. The first one no longer grants access to DynamoDB. The second one is our conditional IAM policy that will only allow users to access their own items on the DynamoDB tables.
-<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/role-start.png" width="70%">
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/role-end.png" width="70%">
 
 Congratulations! You've significantly improved the security of our SaaS app by properly implementing access control and data partitioning. You've also abstracted the security complexity from microservice developers. This way developers can stay focused on shipping great quality software fast. You've now finished the Lab!
 
@@ -241,7 +241,6 @@ To deploy the app, run the deploy-app.sh command.
 cd ~/Desktop
 ./deploy-app.sh
 ```
-
 
 ### How to reset the lab
 You can reset the lab at any time by running the following command:

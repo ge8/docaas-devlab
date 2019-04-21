@@ -1,4 +1,5 @@
-# Self-service Lab
+# Self-service Lab 
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 # SECURING SAAS APPLICAITONS BUILT ON SERVERLESS MICROSERVICES
 In this Lab, you'll crack open the IDE to secure a SaaS platform built on a ReactJS web app and NodeJS serverless microservices. The app uses Amazon API Gateway and Amazon Cognito to simplify the operation and security of the service's API and identity functionality. You'll enforce user isolation and data partitioning with OAuth's JWT tokens and IAM conditional policies. You'll also abstract the security complexity from developers to keep operational burden to a minimum, maximizing developer productivity, and maintaining a great developer experience.
 
@@ -215,6 +216,8 @@ One thing that the SAM CLI doesn't do yet with these two commands (feature reque
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/role-end.png" width="70%">
 
 Congratulations! You've significantly improved the security of our SaaS app by properly implementing access control and data partitioning. You've also abstracted the security complexity from microservice developers. This way developers can stay focused on shipping great quality software fast. You've now finished the Lab!
+
+<img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
 ### Lab Solutions
 If you get stuck or want to see or deploy the lab answers, we have those pre-configured in separate branches.

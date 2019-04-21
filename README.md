@@ -1,6 +1,6 @@
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
-# SELF-SERVICE LAB: SECURING SAAS APPLICAITONS BUILT ON SERVERLESS MICROSERVICES
+# SELF-SERVICE LAB: SECURING SAAS APPLICATIONS BUILT ON SERVERLESS MICROSERVICES
 In this Lab, you'll crack open the IDE to secure a SaaS platform built on a ReactJS web app and NodeJS serverless microservices. The app uses Amazon API Gateway and Amazon Cognito to simplify the operation and security of the service's API and identity functionality. You'll enforce user isolation and data partitioning with OAuth's JWT tokens and IAM conditional policies. You'll also abstract the security complexity from developers to keep operational burden to a minimum, maximizing developer productivity, and maintaining a great developer experience.
 
 # INITIAL SET UP

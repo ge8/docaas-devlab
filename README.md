@@ -1,5 +1,6 @@
 # Self-service Lab 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
+
 # SECURING SAAS APPLICAITONS BUILT ON SERVERLESS MICROSERVICES
 In this Lab, you'll crack open the IDE to secure a SaaS platform built on a ReactJS web app and NodeJS serverless microservices. The app uses Amazon API Gateway and Amazon Cognito to simplify the operation and security of the service's API and identity functionality. You'll enforce user isolation and data partitioning with OAuth's JWT tokens and IAM conditional policies. You'll also abstract the security complexity from developers to keep operational burden to a minimum, maximizing developer productivity, and maintaining a great developer experience.
 
@@ -215,8 +216,7 @@ One thing that the SAM CLI doesn't do yet with these two commands (feature reque
 11. Go to the AWS Console > IAM > Roles and serch for _"CognitoAuthorized"_. You'll find the Cognito Authorized Role. This is the role given to all authorized users. You'll notice this role now has a two IAM policies attached. The first one no longer grants access to DynamoDB. The second one is our conditional IAM policy that will only allow users to access their own items on the DynamoDB tables.
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/role-end.png" width="70%">
 
-Congratulations! You've significantly improved the security of our SaaS app by properly implementing access control and data partitioning. You've also abstracted the security complexity from microservice developers. This way developers can stay focused on shipping great quality software fast. You've now finished the Lab!
-
+Congratulations! You've significantly improved the security of our SaaS app by properly implementing access control and data partitioning. You've also abstracted the security complexity from microservice developers. This way developers can stay focused on shipping great quality software fast. **You've now finished the Lab!**
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
 ### Lab Solutions

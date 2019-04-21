@@ -1,13 +1,13 @@
 # Prep Steps
 1. Clone the repo
 ```shell
-cd ~/Desktop
+cd ~
 git clone https://github.com/ge8/docaas-devlab
 ```
 
 2. Create Resources in Lab Account: R53, S3 in region of choice
 ```shell
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./prep/prep.sh
 ```
 
@@ -15,13 +15,13 @@ cd ~/Desktop/docaas-devlab
 
 4. Create ACM and C9 in us-east-1 Resource in Lab Account and Validate it.
 ```shell
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./prep/acm+c9.sh
 ```
 
 5. Deploy DoCaas app
 ```shell
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./deploy-template.sh 
 ./deploy-app.sh
 ```

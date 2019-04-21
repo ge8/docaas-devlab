@@ -111,7 +111,7 @@ Additionally, we'll use the context created by the Lambda Authorizer to embed al
 
 6. Now we're ready to deploy all changes! This should take about 1 minute.
 ```shell
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./update-template.yaml
 ```
 
@@ -160,7 +160,7 @@ Now our Lambdas will be reading and writing items at **_decks-master_** and **_s
 
 7. Now we're ready to deploy all changes! This should take about 1 minute.
 ```shell
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./update-template.yaml
 ```
 
@@ -198,21 +198,21 @@ git checkout demo2
 ```
 To deploy either of these solutions, simply run the update-template.sh command.
 ```
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./update-template.sh
 ```
 
 ### Want to experiment with the react app?
 To deploy the app, run the deploy-app.sh command.
 ```
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 ./deploy-app.sh
 ```
 
 ### How to reset the lab
 You can reset the lab at any time by running the following command:
 ```
-cd ~/Desktop/docaas-devlab
+cd ~/docaas-devlab
 git reset --hard HEAD && git clean --force -d
 git checkout master
 ./reset-lab.sh

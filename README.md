@@ -1,4 +1,4 @@
-# Self-service Lab 
+#### Self-service Lab 
 <img src="https://github.com/ge8/docaas-summit/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
 # SECURING SAAS APPLICAITONS BUILT ON SERVERLESS MICROSERVICES

@@ -35,5 +35,3 @@ Outputs:
     Value: !Join
         - ', '
         - !GetAtt [HostedZone, NameServers]
-  TheCloud9Instance:
-    Value: !Ref TheCloud9Instance

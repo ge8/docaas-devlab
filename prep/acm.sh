@@ -2,8 +2,6 @@
 
 . ./load-variables.sh
 
-# aws configure set default.region us-east-1
-
 CERTARN=`aws acm request-certificate --domain-name $DOMAIN --validation-method DNS --region us-east-1 --query 'CertificateArn' --output text`
 echo $CERTARN
 sleep 15
@@ -15,12 +13,9 @@ echo $DOMAINNAME1
 echo $NAMECNAME1
 echo $VALUECNAME1
 
-# ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[0].Id' --output text`
-# ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[?OutputKey==`APIBaseURL`].Id' --output text`
-
-ZONEID=$(aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query "HostedZones[?Name==`$DOMAIN`].Id" --output text)
-
+ZONEID=$(aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[0].Id' --output text)
 echo "ZONEID is $ZONEID"
+
 cd prep
 cp r53acm.json r53acm-mod.json
 find r53acm-mod.json -type f -exec sed -i -e "s/##TARGETGOESHERE##/$VALUECNAME1/g" {} \;

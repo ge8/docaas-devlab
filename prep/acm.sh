@@ -18,7 +18,7 @@ echo $VALUECNAME1
 # ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[0].Id' --output text`
 # ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[?OutputKey==`APIBaseURL`].Id' --output text`
 
-ZONEID=$(aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query `HostedZones[?Name==$DOMAIN].Id` --output text)
+ZONEID=$(aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query "HostedZones[?Name==`$DOMAIN`].Id" --output text)
 
 echo "ZONEID is $ZONEID"
 cd prep

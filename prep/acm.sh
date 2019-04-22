@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Deploy acm-template to create ACM in us-east-1
-# sam deploy --stack-name docaas-devlab-prep2 --template-file prep/acm-template.yaml --capabilities CAPABILITY_NAMED_IAM --region us-east-1
-
-# Add records to R53 to validate ACM and wait
-# aws cloudformation describe-stack-events --stack-name docaas-devlab-prep2 --query 'StackEvents' --output text
-
 . ./load-variables.sh
 
 aws configure set default.region us-east-1
@@ -37,12 +31,6 @@ echo "waiting for ACM validation for $CERTARN"
 aws acm wait certificate-validated --certificate-arn $CERTARN
 aws configure set default.region $REGION
 echo 'Validation Done!'
-
-
-
-
-
-
 
 
 

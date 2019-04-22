@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cloud 9 IDE for DoCaaS devlabs
+
+Resources:
+  #CLOUD9 Instance
+  TheCloud9Instance:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Description: Cloud 9 IDE for Securing Saas Applications Built on Serverless Microservices DevLab
+      InstanceType: t3.large
+      Name: Securing Saas Applications Built on Serverless Microservices
+
+Outputs:
+  TheCloud9Instance:
+    Value: !Ref TheCloud9Instance

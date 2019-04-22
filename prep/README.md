@@ -1,27 +1,24 @@
 # Prep Steps
-1. Clone the repo
+## On AWS Organizations
+1. Deploy c9.yaml into all AWS accounts in the ap-northeast-1 region.
+
+## On Cloud9
+2. Clone the repo and create Resources in Lab Account: R53, S3 in ap-northeast-1
 ```shell
 cd ~/environment
 git clone https://github.com/ge8/docaas-devlab
-```
-
-2. Create Resources in Lab Account: R53, S3 in region of choice
-```shell
 cd ~/environment/docaas-devlab
 ./prep/prep.sh
 ```
 
+## On Gerardo's account
 3. Gerardo to delegate ${AWS::AccountId}.docaas.net to this account's name servers. Then wait 30 min for ACM to be validated.
 
-4. Create ACM and C9 in us-east-1 Resource in Lab Account and Validate it.
+## On Cloud9
+4. Create ACM in us-east-1 and validate it. Then Deploy DoCaas app:
 ```shell
 cd ~/environment/docaas-devlab
-./prep/acm+c9.sh
-```
-
-5. Deploy DoCaas app
-```shell
-cd ~/environment/docaas-devlab
+./prep/acm.sh
 ./deploy-template.sh 
 ./deploy-app.sh
 ```

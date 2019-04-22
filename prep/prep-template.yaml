@@ -20,6 +20,14 @@ Resources:
     Properties: 
       Name: !Sub '${AWS::AccountId}.docaas.net.'
 
+  #CLOUD9 Instance
+  TheCloud9Instance:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Description: Cloud 9 IDE for Securing Saas Applications Built on Serverless Microservices DevLab
+      InstanceType: t2.large
+      Name: Securing Saas Applications Built on Serverless Microservices
+
 Outputs:
   DomainName:
     Value: !Sub '${AWS::AccountId}.docaas.net'

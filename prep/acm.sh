@@ -2,15 +2,15 @@
 
 . ./load-variables.sh
 
-aws configure set default.region us-east-1
+# aws configure set default.region us-east-1
 
-CERTARN=`aws acm request-certificate --domain-name $DOMAIN --validation-method DNS --query 'CertificateArn' --output text`
+CERTARN=`aws acm request-certificate --domain-name $DOMAIN --validation-method DNS --region us-east-1 --query 'CertificateArn' --output text`
 echo $CERTARN
 sleep 15
 
-DOMAINNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].DomainName' --output text`
-NAMECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Name' --output text`
-VALUECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Value' --output text`
+DOMAINNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --region us-east-1 --query 'Certificate.DomainValidationOptions[0].DomainName' --output text`
+NAMECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --region us-east-1 --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Name' --output text`
+VALUECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --region us-east-1 --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Value' --output text`
 echo $DOMAINNAME1
 echo $NAMECNAME1
 echo $VALUECNAME1
@@ -32,8 +32,7 @@ rm -f r53acm-mod.json
 cd ..
 
 echo "waiting for ACM validation for $CERTARN"
-aws acm wait certificate-validated --certificate-arn $CERTARN
-aws configure set default.region $REGION
+aws acm wait certificate-validated --certificate-arn $CERTARN --region us-east-1
 echo 'Validation Done!'
 
 

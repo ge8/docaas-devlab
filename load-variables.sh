@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ACCOUNT=$(aws sts get-caller-identity --output text --query 'Account')
+export ACCOUNT=$(aws sts get-caller-identity --output text --query 'Account')
 TAIL1="docaas-devlab"
 TAIL2="docaas.net"
 

@@ -181,6 +181,14 @@ One thing that the SAM CLI doesn't do yet with these two commands (feature reque
 
 Congratulations! You've significantly improved the security of our SaaS app by properly implementing access control and data partitioning. You've also abstracted the security complexity from microservice developers. This way developers can stay focused on shipping great quality software fast. **You've now finished the Lab!**
 
+12. Please reset the lab to allow others to use it =)
+```
+cd ~/environment/docaas-devlab
+git reset --hard HEAD && git clean --force -d
+git checkout master
+./reset-lab.sh
+```
+
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
 ### Lab Solutions

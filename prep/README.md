@@ -14,3 +14,5 @@ git clone https://github.com/ge8/docaas-devlab && cd docaas-devlab
 ./deploy-template.sh 
 ./deploy-app.sh
 ```
+
+4. Login and change passwords for 3 users.

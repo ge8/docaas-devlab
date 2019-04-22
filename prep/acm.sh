@@ -4,18 +4,18 @@
 
 aws configure set default.region us-east-1
 
-CERTARN=`aws acm request-certificate --domain-name $DOMAIN --validation-method DNS | jq --raw-output '.CertificateArn'`
+CERTARN=`aws acm request-certificate --domain-name $DOMAIN --validation-method DNS --query 'CertificateArn' --output text`
 echo $CERTARN
 sleep 15
 
-DOMAINNAME1=`aws acm describe-certificate --certificate-arn $CERTARN | jq --raw-output '.Certificate.DomainValidationOptions[0].DomainName'`
-NAMECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN | jq --raw-output '.Certificate.DomainValidationOptions[0].ResourceRecord.Name'`
-VALUECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN | jq --raw-output '.Certificate.DomainValidationOptions[0].ResourceRecord.Value'`
+DOMAINNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].DomainName' --output text`
+NAMECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Name' --output text`
+VALUECNAME1=`aws acm describe-certificate --certificate-arn $CERTARN --query 'Certificate.DomainValidationOptions[0].ResourceRecord.Value' --output text`
 echo $DOMAINNAME1
 echo $NAMECNAME1
 echo $VALUECNAME1
 
-ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN | jq --raw-output '.HostedZones[0].Id'`
+ZONEID=`aws route53 list-hosted-zones-by-name --dns-name $DOMAIN --query 'HostedZones[0].Id' --output text`
 echo "ZONEID is $ZONEID"
 cd prep
 cp r53acm.json r53acm-mod.json

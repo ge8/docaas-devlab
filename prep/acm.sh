@@ -31,15 +31,12 @@ aws acm wait certificate-validated --certificate-arn $CERTARN --region us-east-1
 echo 'Validation Done!'
 
 
-
-
-
-
 # Modify default DomainName in template.yaml 
-ACCOUNT=$(aws sts get-caller-identity --output text --query 'Account')
-TAIL="docaas-devlab"
-export SAMBUCKET="$ACCOUNT-$TAIL"
+find backend/template.yaml -type f -exec sed -i -e "s/summit.docaas.net/$DOMAIN/g" {} \;
+rm -f backend/template.yaml-e 
 
 # Modify default AcmCertificateArn in template.yaml from docaas-devlab-prep2 output
+find backend/template.yaml -type f -exec sed -i -e "s#arn:aws:acm:us-east-1:385251132543:certificate/d79fe14c-ca45-473e-99ce-451921703e86#$CERTARN#g" {} \;
+rm -f backend/template.yaml-e 
 
 

@@ -25,7 +25,7 @@ Resources:
     Type: AWS::Cloud9::EnvironmentEC2
     Properties:
       Description: Cloud 9 IDE for Securing Saas Applications Built on Serverless Microservices DevLab
-      InstanceType: t2.large
+      InstanceType: t3.large
       Name: Securing Saas Applications Built on Serverless Microservices
 
 Outputs:

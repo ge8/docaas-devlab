@@ -27,6 +27,7 @@ Resources:
       Description: Cloud 9 IDE for Securing Saas Applications Built on Serverless Microservices DevLab
       InstanceType: t3.large
       Name: Securing Saas Applications Built on Serverless Microservices
+      OwnerArn: !Sub "arn:aws:iam::${AWS::AccountId}:user/labStudent_1"
 
 Outputs:
   DomainName:

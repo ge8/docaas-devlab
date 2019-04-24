@@ -51,7 +51,15 @@ This flexibility makes Open ID Connect identity providers like Amazon Cognito an
 
 On Lab 1, we will use the **_custom:plan_** found in the JWT token to control access to API resources.
 
-7. Check out the ReactJS source code found in the **_frontend_** directory.
+7. Now let's open our IDE and start checking out the code. We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
+
+Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "
+
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="45%">
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="45%">
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="45%">
+
+First, check out the ReactJS source code found in the **_frontend_** directory.
 
 8. Check out the backend source code found in the **_backend_** directory. 
 * Note there are 9 AWS Lambda functions written in NodeJS - 7 of those are part of the microservices that serve our app, plus 2 Lambda functions for CORS and Lambda Authorizer (not in use yet - you'll use it in Lab 1)

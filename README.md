@@ -55,9 +55,8 @@ On Lab 1, we will use the **_custom:plan_** found in the JWT token to control ac
 
 Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "
 
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="45%">
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="45%">
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="45%">
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="45%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="45%">
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="70%">
 
 First, check out the ReactJS source code found in the **_frontend_** directory.
 

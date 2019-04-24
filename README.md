@@ -1,18 +1,23 @@
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
-# DEVLAB: SECURING SAAS APPLICATIONS BUILT ON SERVERLESS MICROSERVICES
+# DEVLAB: SECURING SAAS APPLICATIONS BUILT ON SERVERLESS MICROSERVICES - Level 400
 In this DevLab, you'll crack open the IDE to secure a SaaS platform built on a ReactJS web app and NodeJS serverless microservices. The app uses Amazon API Gateway and Amazon Cognito to simplify the operation and security of the service's API and identity functionality. You'll enforce user isolation and data partitioning with OAuth's JWT tokens and IAM conditional policies. You'll also abstract the security complexity from developers to keep operational burden to a minimum, maximizing developer productivity, and maintaining a great developer experience.
 
 # LABS 
-### Lab 0: Check the app out
-Deck Of Cards as a Service is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
+### Lab 0: Check the app out at **_YourAWSAccount_.docaas.net**
+Your app's public url is **_YourAWSAccount_.docaas.net**. You need to replace **_YourAWSAccount_** with the number of the AWS account you're using without any dashes. You can find the AWS account you are using on the top right corner of the AWS console, under my account (for example, if the AWS account assigned to your laptop is 7283-2085-8977, your app would be located at 728320858977.docaas.net)
+
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/account.png" width="70%">
+
+##### DoCaaS
+**Deck Of Cards as a Service** is an online service that allows users to create virtual decks of cards, shuffle decks, deal 2-card games, etc. We have three user plans:
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/plans.png" width="30%">
 
-1. Login into the app with three different users (gold1, silver1 and bronze1) by going to your DomainName using incognito browser sessions on three different browsers (this prevent caching issues with ReactJS). You will be prompted to change the password for a permanent one e.g. Permanent1!. For example:
-*  Chrome, username: gold1, password: Temporary1! (Use Chrome for the gold1 user - you'll need this below)
-*  Firefox, username: silver1, password: Temporary1!
-*  Safari/Edge, username: bronze1, password: Temporary1!
+1. Login into the app with three different users (gold1, silver1 and bronze1) by going to your app's url (**_YourAWSAccount_.docaas.net**) using incognito browser sessions on three different browsers (this prevent caching issues with ReactJS).
+*  Chrome, username: gold1, password: Permanent1! (Use Chrome for the gold1 user - you'll need this below)
+*  Firefox, username: silver1, password: Permanent1!
+*  Safari/Edge, username: bronze1, password: Permanent1!
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/entry.png" width="50%">
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". 

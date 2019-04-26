@@ -14,6 +14,21 @@ Your app's public url is **_YourAWSAccount_.docaas.net**. You need to replace **
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/plans.png" width="30%">
 
+0. Let's set up the app. We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
+
+Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "Securing SaaS Applications Built on Serverless Microservices" Cloud9.
+
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="70%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="70%">
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="70%">
+
+On the Cloud9 terminal, execute the following commands to set the app up. It should take a couple of minutes - you can continue to the next step while this executes.
+```
+cd ~/environment/docaas-devlab
+git reset --hard HEAD && git clean --force -d
+git checkout master
+./reset-lab.sh
+```
+
 1. Login into the app with three different users (gold1, silver1 and bronze1) by going to your app's url (**_YourAWSAccount_.docaas.net**) using incognito browser sessions on three different browsers (this prevent caching issues with ReactJS).
 *  Chrome, username: gold1, password: Permanent1! (Use Chrome for the gold1 user - you'll need this below)
 *  Firefox, username: silver1, password: Permanent1!
@@ -51,12 +66,7 @@ This flexibility makes Open ID Connect identity providers like Amazon Cognito an
 
 On Lab 1, we will use the **_custom:plan_** found in the JWT token to control access to API resources.
 
-7. Now let's open our IDE and start checking out the code. We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
-
-Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "Securing SaaS Applications Built on Serverless Microservices" Cloud9.
-
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="70%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="70%">
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="70%">
+7. Now let's open our Cloud9 IDE and start checking out the code. 
 
 First, check out the ReactJS source code found in the **_frontend_** directory.
 
@@ -124,7 +134,7 @@ Additionally, we'll use the context created by the Lambda Authorizer to embed al
 6. Now we're ready to deploy all changes! This should take about 1 minute.
 ```shell
 cd ~/environment/docaas-devlab
-./update-template.yaml
+./update-template.sh
 ```
 
 7. Check out the app and confirm everything is working.
@@ -175,7 +185,7 @@ Now our Lambdas will be reading and writing items at **_decks-master_** and **_s
 7. Now we're ready to deploy all changes! This should take about 1 minute.
 ```shell
 cd ~/environment/docaas-devlab
-./update-template.yaml
+./update-template.sh
 ```
 
 8. (Optional) Check out what's inside the **_./update-template.sh_** script found in the project root. 

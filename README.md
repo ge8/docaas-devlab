@@ -14,7 +14,7 @@ Your app's public url is **_YourAWSAccount_.docaas.net**. You need to replace **
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/plans.png" width="30%">
 
-0. Let's set up the app. We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
+0. Let's reset the lab (if the lab was reset before, you can skip this entire step). We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
 
 Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "Securing SaaS Applications Built on Serverless Microservices" Cloud9.
 

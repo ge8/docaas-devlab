@@ -22,9 +22,9 @@ Your app's public url is **_YourAWSAccount_.docaas.net**. You need to replace **
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". 
 
-Note: the first time you execute an AWS Lambda function, you may experience a couple of seconds of delay - this is called a "cold start". This only occurs the first time you use a Lambda function after creation, update or after a long period without use. For this app, a single "create" may cold-start up to 3 lambda functions, so you might need to way up to 10 seconds the first time to execute these functions. This lab doesn't intend to resolve cold starts. This is a great advanced re:Invent session that explains cold-starts and how to optimise your set up [https://www.youtube.com/watch?v=oQFORsso2go]
+Note: you might experience slow APIs the first time to hit the API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
+" target="_blank">More Info</a>
 
-Some of the application functions, hit multiple lambdas in sequence, if they're all cold, you might expeci
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/get111.png" width="44%">
 
 3. With some users, play a few **_games_**. Note that this 2-card game with perfectly ordered decks, makes no sense.
@@ -128,6 +128,9 @@ cd ~/environment/docaas-devlab
 ```
 
 7. Check out the app and confirm everything is working.
+Note: If the appthe first time you execute an AWS Lambda function, you may experience a couple of seconds of delay - this is called a "cold start". This only occurs the first time you use a Lambda function after creation, update or after a long period without use. For this app, a single "create" may cold-start up to 3 lambda functions, so you might need to way up to 10 seconds the first time to execute these functions. This lab doesn't intend to resolve cold starts. This is a great advanced re:Invent session that explains cold-starts and how to optimise your set up [https://www.youtube.com/watch?v=oQFORsso2go]
+
+Some of the application APIs hit multiple lambdas in sequence, if they're all cold, you might experience up to 12 seconds of delay the first time you hit an API. After that first time, the response should be quick.
 
 8. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) are now blocked from accessing the **_Cut_** API resouce thanks to the fine grained access control we implemented.
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/insomnia-2.png" width="70%">
@@ -203,6 +206,7 @@ git checkout master
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/AWS-logo.png" width="20%">
 
+# FAQS 
 ### Lab Solutions
 If you get stuck or want to see or deploy the lab answers, we have those pre-configured in separate branches.
 
@@ -237,3 +241,11 @@ git reset --hard HEAD && git clean --force -d
 git checkout master
 ./reset-lab.sh
 ```
+
+### My deployment seems successful but now the app is slow
+The first time you execute an AWS Lambda function, you may experience a couple of seconds of delay - this is called a "cold start". This only occurs the first time you use a Lambda function after creation, update or after a long period without use. For this app, a single "create" may cold-start up to 3 lambda functions, so you might need to way up to 10 seconds the first time to execute these functions. This lab doesn't intend to resolve cold starts. This is a great advanced re:Invent session that explains cold-starts and how to optimise your set up [https://www.youtube.com/watch?v=oQFORsso2go].
+
+Some of the application APIs hit multiple lambdas in sequence, if they're all cold for example after a new deployment, you might experience up to 12 seconds of delay the first time you hit an API. After that first time, the response should be quick.
+
+
+

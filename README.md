@@ -250,4 +250,4 @@ The first time you execute an AWS Lambda function, you may experience a couple o
 Some of the application APIs hit multiple lambdas in sequence, if they're all cold for example after a new deployment, you might experience up to 12 seconds of delay the first time you hit an API. After that first time, the response should be quick.
 
 ### How do I log out of the app?
-To log out you can close the browser. Make sure you're using incognito browser sessions and that you close all incognito browser sessions from the same browser (Chrome, Firefox). It would be better to have a sign out button but we didn't implement it yet.
+To log out you can close the browser. Make sure you're using incognito browser sessions and that you close all incognito browser sessions from the same browser (Chrome, Firefox). It would be better to have a sign out button but we haven't implemented it yet.

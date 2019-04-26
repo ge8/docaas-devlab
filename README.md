@@ -21,7 +21,7 @@ Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at t
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="70%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="70%">
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="70%">
 
-On the Cloud9 terminal, execute the following commands to set the app up. It should take a couple of minutes - you can continue to the next step while this executes.
+On the Cloud9 terminal, execute the following commands to set the app up. It should take a couple of minutes.
 ```
 cd ~/environment/docaas-devlab
 git reset --hard HEAD && git clean --force -d

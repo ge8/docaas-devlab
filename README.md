@@ -53,7 +53,7 @@ On Lab 1, we will use the **_custom:plan_** found in the JWT token to control ac
 
 7. Now let's open our IDE and start checking out the code. We will be using AWS Cloud9 as our IDE. Also, our entire app is deployed in the AWS Tokyo region (**ap-northeast-1**). 
 
-Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "
+Go to the AWS Console and find Cloud9. Make sure you're in the Tokyo region at the top right. Open the "Securing SaaS Applications Built on Serverless Microservices" Cloud9.
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9.png" width="70%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/opencloud9.png" width="70%">
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/cloud9ide.png" width="70%">
@@ -185,9 +185,10 @@ You'll notice we're using the SAM CLI <a href="https://docs.aws.amazon.com/serve
 One thing that the SAM CLI doesn't do yet with these two commands (feature request) is updating the API stage, so our **_./update-template.sh_** script does precicely that at the end of the script.
 
 9. Play with the app in the browser. Make sure to at least **_create_** a deck and play a **_game_**. Notice the notification after creating the deck that now includes a much longer name.
-<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/long-name.png" width="70%">
 Note: you might experience slow APIs the first time to hit each API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
 " target="_blank">For more info: jump to the "My deployment seems successful but now the app is slow" FAQ</a>
+
+<img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/long-name.png" width="70%">
 
 10. Go to the AWS Console > DynamoDB > Tables and check out the recently created items in both the **_decks-master_** and **_scores-master_** tables. You'll notice on the partition key **_id_** is much longer because it now includes the user's Cognito Identity ID prepended.
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/table-end.png" width="70%">

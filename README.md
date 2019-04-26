@@ -22,8 +22,8 @@ Your app's public url is **_YourAWSAccount_.docaas.net**. You need to replace **
 
 2. With some users, **_create_** and **_get_** a couple of decks. You need to type a deck name or number in the text field e.g. "111". 
 
-Note: you might experience slow APIs the first time to hit the API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
-" target="_blank">More Info</a>
+Note: you might experience slow APIs the first time to hit each API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
+" target="_blank">For more info: jump to the "My deployment seems successful but now the app is slow" FAQ</a>
 
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/create111.png" width="45%"> <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/get111.png" width="44%">
 
@@ -128,9 +128,8 @@ cd ~/environment/docaas-devlab
 ```
 
 7. Check out the app and confirm everything is working.
-Note: If the appthe first time you execute an AWS Lambda function, you may experience a couple of seconds of delay - this is called a "cold start". This only occurs the first time you use a Lambda function after creation, update or after a long period without use. For this app, a single "create" may cold-start up to 3 lambda functions, so you might need to way up to 10 seconds the first time to execute these functions. This lab doesn't intend to resolve cold starts. This is a great advanced re:Invent session that explains cold-starts and how to optimise your set up [https://www.youtube.com/watch?v=oQFORsso2go]
-
-Some of the application APIs hit multiple lambdas in sequence, if they're all cold, you might experience up to 12 seconds of delay the first time you hit an API. After that first time, the response should be quick.
+Note: you might experience slow APIs the first time to hit each API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
+" target="_blank">For more info: jump to the "My deployment seems successful but now the app is slow" FAQ</a>
 
 8. (Optional) use an REST client like Insomnia [https://insomnia.rest/] to see how the silver1 and the bronze1 users (using custom:plan=silver and custom:plan=bronze respectively) are now blocked from accessing the **_Cut_** API resouce thanks to the fine grained access control we implemented.
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/insomnia-2.png" width="70%">
@@ -187,6 +186,8 @@ One thing that the SAM CLI doesn't do yet with these two commands (feature reque
 
 9. Play with the app in the browser. Make sure to at least **_create_** a deck and play a **_game_**. Notice the notification after creating the deck that now includes a much longer name.
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/long-name.png" width="70%">
+Note: you might experience slow APIs the first time to hit each API after a new deploy. This is due to Lambda cold starts <a href="https://github.com/ge8/docaas-devlab#My-deployment-seems-successful-but-now-the-app-is-slow
+" target="_blank">For more info: jump to the "My deployment seems successful but now the app is slow" FAQ</a>
 
 10. Go to the AWS Console > DynamoDB > Tables and check out the recently created items in both the **_decks-master_** and **_scores-master_** tables. You'll notice on the partition key **_id_** is much longer because it now includes the user's Cognito Identity ID prepended.
 <img src="https://github.com/ge8/docaas-devlab/raw/master/frontend/src/images/table-end.png" width="70%">
@@ -247,5 +248,5 @@ The first time you execute an AWS Lambda function, you may experience a couple o
 
 Some of the application APIs hit multiple lambdas in sequence, if they're all cold for example after a new deployment, you might experience up to 12 seconds of delay the first time you hit an API. After that first time, the response should be quick.
 
-
-
+### How do I log out of the app?
+To log out you can close the browser. Make sure you're using incognito browser sessions and that you close all incognito browser sessions from the same browser (Chrome, Firefox). It would be better to have a sign out button but we didn't implement it yet.
